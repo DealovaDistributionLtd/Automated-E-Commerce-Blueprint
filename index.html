@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>淘梦岛 | Taomeng Island - Global E-Commerce & Automation Hub</title>
+    <title>SolarGrid EU | Next-Gen Photovoltaic & Smart Utility Systems</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#FF5722', // Taobao/Shopee Orange
-                        primaryHover: '#F4511E',
-                        secondary: '#1A1A1A',
-                        accent: '#00B0FF',
-                        darkBg: '#0F172A',
+                        primary: '#10B981', // Emerald Solar Green
+                        primaryHover: '#059669',
+                        secondary: '#0F172A',
+                        accent: '#F59E0B', // Solar Energy Amber
+                        darkBg: '#090D16',
                         cardBg: '#1E293B',
                     },
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     }
                 }
             }
@@ -33,8 +33,8 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(255, 87, 34, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(255, 87, 34, 0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
         }
         .glow-effect { animation: pulseGlow 3s infinite; }
     </style>
@@ -42,10 +42,10 @@
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-primary via-red-600 to-amber-600 text-white text-xs py-2 px-4 font-medium flex justify-between items-center z-50">
+    <div class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-600 text-white text-xs py-2 px-4 font-medium flex justify-between items-center z-50">
         <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap">
-            <span class="bg-black/30 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider animate-pulse">⚡ Flash Deal</span>
-            <span class="truncate">Amazon.nl & Bol.com Automated Sync Active • Free EU Shipping on Orders over €50 • 淘梦岛 (Dreamer Island) Official Store</span>
+            <span class="bg-black/30 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider animate-pulse">⚡ EU Green Grant Ready</span>
+            <span class="truncate">Amazon.nl & Bol.com Automated Solar Feed Active • Free EU Express Delivery on Inverters & Panels over €250 • SolarGrid Pro Solutions</span>
         </div>
         <div class="hidden md:flex items-center gap-4 text-slate-200">
             <a href="#automation-login" onclick="switchView('hub-login')" class="hover:text-white transition flex items-center gap-1 font-semibold"><i class="fa-solid fa-lock text-amber-300"></i> Merchant Hub</a>
@@ -53,7 +53,7 @@
             <select id="currency-selector" onchange="changeCurrency(this.value)" class="bg-black/30 text-white text-xs rounded px-2 py-0.5 border border-white/20 focus:outline-none">
                 <option value="EUR">EUR (€)</option>
                 <option value="USD">USD ($)</option>
-                <option value="MYR">MYR (RM)</option>
+                <option value="GBP">GBP (£)</option>
             </select>
         </div>
     </div>
@@ -64,20 +64,20 @@
             <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('storefront')">
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-amber-500 flex items-center justify-center text-white font-black text-2xl shadow-lg glow-effect">
-                    淘
+                    <i class="fa-solid fa-solar-panel"></i>
                 </div>
                 <div>
                     <h1 class="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
-                        淘梦岛 <span class="text-xs font-semibold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">Dreamer Island</span>
+                        SolarGrid <span class="text-xs font-semibold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">EU Direct</span>
                     </h1>
-                    <p class="text-xs text-slate-400 font-medium">PADI Dive • Underwater Pro • Automated Trading</p>
+                    <p class="text-xs text-slate-400 font-medium">Photovoltaic Panels • Inverters • Smart Battery Storage</p>
                 </div>
             </div>
 
             <!-- Search Bar -->
             <div class="hidden md:flex flex-1 max-w-xl mx-4">
                 <div class="relative w-full">
-                    <input type="text" id="main-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ items across 淘梦岛 PADI Courses, Underwater Gear, MT5 EAs..." class="w-full bg-slate-800 text-slate-200 pl-11 pr-24 py-2.5 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-sm shadow-inner transition">
+                    <input type="text" id="main-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ solar modules, hybrid inverters, mounting kits..." class="w-full bg-slate-800 text-slate-200 pl-11 pr-24 py-2.5 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-sm shadow-inner transition">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
                     <button onclick="handleSearch(document.getElementById('main-search-input').value)" class="absolute right-1 top-1 bg-primary hover:bg-primaryHover text-white px-5 py-1.5 rounded-full text-xs font-bold transition shadow">
                         Search
@@ -104,7 +104,7 @@
         <!-- Mobile Search Bar -->
         <div class="md:hidden px-4 pb-3">
             <div class="relative w-full">
-                <input type="text" id="mobile-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ items..." class="w-full bg-slate-800 text-slate-200 pl-10 pr-20 py-2 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-xs">
+                <input type="text" id="mobile-search-input" oninput="handleSearch(this.value)" placeholder="Search solar applications..." class="w-full bg-slate-800 text-slate-200 pl-10 pr-20 py-2 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-xs">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
                 <button onclick="handleSearch(document.getElementById('mobile-search-input').value)" class="absolute right-1 top-1 bg-primary text-white px-4 py-1 rounded-full text-[10px] font-bold">
                     Search
@@ -115,7 +115,7 @@
 
     <!-- Main Dynamic View Container -->
     <main id="app-main-container" class="flex-1 flex flex-col">
-        <!-- Injected via JavaScript (Storefront / Hub Login / Dashboard) -->
+        <!-- Injected via JavaScript -->
     </main>
 
     <!-- Cart Slide-Over Drawer -->
@@ -126,7 +126,7 @@
                 <!-- Cart Header -->
                 <div class="p-5 border-b border-slate-800 flex items-center justify-between">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-cart-shopping text-primary"></i> Shopping Cart (<span id="drawer-item-count">0</span>)
+                        <i class="fa-solid fa-cart-shopping text-primary"></i> Solar Cart (<span id="drawer-item-count">0</span>)
                     </h3>
                     <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white p-2">
                         <i class="fa-solid fa-xmark text-lg"></i>
@@ -139,13 +139,13 @@
                 <!-- Cart Footer & Checkout -->
                 <div class="p-5 border-t border-slate-800 bg-slate-900/80">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-sm text-slate-400">Subtotal (EU Tax Included):</span>
+                        <span class="text-sm text-slate-400">Subtotal (EU VAT Incl.):</span>
                         <span id="cart-subtotal-display" class="text-xl font-black text-primary">€0.00</span>
                     </div>
-                    <button onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-primary to-amber-600 hover:from-primaryHover hover:to-amber-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-lock"></i> Proceed to Secure iDEAL / Bancontact Checkout
+                    <button onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-primary to-emerald-700 hover:from-primaryHover hover:to-emerald-800 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock"></i> Proceed to Secure iDEAL / SEPA Checkout
                     </button>
-                    <p class="text-[10px] text-center text-slate-500 mt-3">Automated sync with Amazon.nl & Bol.com fulfillment pipelines.</p>
+                    <p class="text-[10px] text-center text-slate-500 mt-3">Automated dispatch via BigBuy Solar & Droppery EU Warehouses.</p>
                 </div>
             </div>
         </div>
@@ -158,41 +158,41 @@
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <h3 class="text-xl font-extrabold text-white mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Secure EU Checkout
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Secure EU Utility Checkout
             </h3>
-            <p class="text-xs text-slate-400 mb-6">Enter your delivery details for dispatch via BigBuy / Droppery EU warehouse.</p>
+            <p class="text-xs text-slate-400 mb-6">Enter installation delivery details for heavy freight or parcel dispatch.</p>
             
             <form onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">First Name</label>
-                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Desmond">
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Jan">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Last Name</label>
-                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Maker">
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="De Vries">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
-                    <input type="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="desmond@taomeng.com">
+                    <input type="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="jan@solargrid.nl">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Delivery Address (NL / BE / EU)</label>
-                    <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Keizersgracht 123, Amsterdam">
+                    <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Prinsengracht 45, Amsterdam">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Postal Code</label>
-                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="1015 CJ">
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="1016 DK">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Payment Method</label>
                         <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
                             <option>iDEAL (Netherlands)</option>
                             <option>Bancontact (Belgium)</option>
-                            <option>Credit Card (Visa/Mastercard)</option>
-                            <option>PayPal EU</option>
+                            <option>SEPA Bank Transfer</option>
+                            <option>Business Invoice (KvK Verified)</option>
                         </select>
                     </div>
                 </div>
@@ -214,20 +214,20 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">淘</div>
-                    <span class="font-bold text-white text-base">淘梦岛 (Dreamer Island)</span>
+                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold"><i class="fa-solid fa-solar-panel"></i></div>
+                    <span class="font-bold text-white text-base">SolarGrid EU Direct</span>
                 </div>
-                <p class="text-slate-400 mb-4 leading-relaxed">Official e-commerce storefront and automated multi-channel hub operating on Amazon.nl and Bol.com with automated EU supplier fulfillment.</p>
-                <p class="text-slate-500">PADI Dive Instructor • Underwater Videography • MQL5 Expert Advisors</p>
+                <p class="text-slate-400 mb-4 leading-relaxed">Official automated e-commerce and utility platform operating on Amazon.nl and Bol.com with automated EU photovoltaic supplier fulfillment.</p>
+                <p class="text-slate-500">Commercial Solar Solutions • Inverters • Energy Storage Systems</p>
             </div>
             <div>
                 <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Store Categories</h4>
                 <ul class="space-y-2">
                     <li><a href="#" onclick="filterByCategory('All'); return false;" class="hover:text-white transition">All 500+ Items</a></li>
-                    <li><a href="#" onclick="filterByCategory('PADI Diving'); return false;" class="hover:text-white transition">PADI Diving & Courses</a></li>
-                    <li><a href="#" onclick="filterByCategory('Dreamer Island Packages'); return false;" class="hover:text-white transition">Dreamer Island Packages</a></li>
-                    <li><a href="#" onclick="filterByCategory('Underwater Gear'); return false;" class="hover:text-white transition">Underwater Videography Gear</a></li>
-                    <li><a href="#" onclick="filterByCategory('Trading EAs'); return false;" class="hover:text-white transition">MetaTrader 5 Expert Advisors</a></li>
+                    <li><a href="#" onclick="filterByCategory('Solar Panels'); return false;" class="hover:text-white transition">Photovoltaic Panels</a></li>
+                    <li><a href="#" onclick="filterByCategory('Hybrid Inverters'); return false;" class="hover:text-white transition">Hybrid Inverters</a></li>
+                    <li><a href="#" onclick="filterByCategory('Battery Storage'); return false;" class="hover:text-white transition">Lithium Battery Storage</a></li>
+                    <li><a href="#" onclick="filterByCategory('Mounting & Racks'); return false;" class="hover:text-white transition">Mounting Hardware & Racks</a></li>
                 </ul>
             </div>
             <div>
@@ -236,64 +236,64 @@
                     <li><a href="#hub-login" onclick="switchView('hub-login'); return false;" class="hover:text-white transition">Merchant Hub Login</a></li>
                     <li><a href="#" class="hover:text-white transition">Amazon.nl SP-API Integration</a></li>
                     <li><a href="#" class="hover:text-white transition">Bol.com ChannelEngine Sync</a></li>
-                    <li><a href="#" class="hover:text-white transition">BigBuy / Droppery Supplier API</a></li>
+                    <li><a href="#" class="hover:text-white transition">BigBuy Solar Supplier API</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Support & Contact</h4>
-                <p class="mb-2">Assistants: Ken & @序序宝宝</p>
-                <p class="mb-2">Email: support@taomeng.com</p>
-                <p class="text-slate-500">Sabah, Malaysia / Amsterdam, NL Operations</p>
+                <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Support & Utilities</h4>
+                <p class="mb-2">Dutch Support Hotline: +31 20 798 2000</p>
+                <p class="mb-2">Email: sales@solargrid-eu.com</p>
+                <p class="text-slate-500">Rotterdam, Netherlands / Antwerp, Belgium Depots</p>
             </div>
         </div>
         <div class="max-w-7xl mx-auto border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p>&copy; 2026 淘梦岛 (Dreamer Island) & Taomeng Distribution Ltd. All rights reserved.</p>
+            <p>&copy; 2026 SolarGrid EU Distribution B.V. All rights reserved.</p>
             <div class="flex gap-4">
                 <span class="px-2.5 py-1 rounded bg-slate-800 text-emerald-400 font-bold text-[10px]">Amazon.nl Pro Active</span>
-                <span class="px-2.5 py-1 rounded bg-slate-800 text-accent font-bold text-[10px]">Bol.com Partner Verified</span>
+                <span class="px-2.5 py-1 rounded bg-slate-800 text-amber-400 font-bold text-[10px]">Bol.com Partner Verified</span>
             </div>
         </div>
     </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
-        // --- 500+ PRODUCTS GENERATOR ---
-        const categories = ['PADI Diving', 'Dreamer Island Packages', 'Underwater Gear', 'Trading EAs', 'Home Decor', 'Audio & Tech'];
+        // --- 500+ SOLAR PRODUCTS GENERATOR ---
+        const categories = ['Solar Panels', 'Hybrid Inverters', 'Battery Storage', 'Mounting & Racks', 'EV Chargers', 'Smart Meters'];
         const baseProducts = [
-            { name: "PADI Open Water Diver Course + Dreamer Island Stay", cat: "PADI Diving", price: 389.00, img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&auto=format&fit=crop&q=60", sales: 1420 },
-            { name: "PADI Advanced Open Water + Deep Dive Special", cat: "PADI Diving", price: 449.00, img: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=500&auto=format&fit=crop&q=60", sales: 980 },
-            { name: "Discover Scuba Diving (DSD) Semporna / 淘梦岛", cat: "Dreamer Island Packages", price: 129.00, img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60", sales: 3410 },
-            { name: "3D2N Dreamer Island VIP Diving & Fish Storm Package", cat: "Dreamer Island Packages", price: 699.00, img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60", sales: 2150 },
-            { name: "DJI Osmo Action 6 Underwater Housing & AOI 0.73x Lens", cat: "Underwater Gear", price: 549.00, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop&q=60", sales: 780 },
-            { name: "Dual-Light Video Rig with 5000lm LED Strobe Arms", cat: "Underwater Gear", price: 289.00, img: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60", sales: 620 },
-            { name: "MT5 Expert Advisor: 'Apex Sentinel' Trend Scalper", cat: "Trading EAs", price: 299.00, img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=500&auto=format&fit=crop&q=60", sales: 1890 },
-            { name: "MT5 Expert Advisor: 'Dark Venus' Gold Hedging Bot", cat: "Trading EAs", price: 399.00, img: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=500&auto=format&fit=crop&q=60", sales: 2450 },
-            { name: "Ceiling-Height Fluted PVC Wall Panel (Box of 10)", cat: "Home Decor", price: 119.00, img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=500&auto=format&fit=crop&q=60", sales: 1120 },
-            { name: "Custom Automotive DSP 4-Channel Amplifier & Subwoofer", cat: "Audio & Tech", price: 349.00, img: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&auto=format&fit=crop&q=60", sales: 530 }
+            { name: "Tier-1 450W Monocrystalline Bifacial Solar Panel (PERC)", cat: "Solar Panels", price: 169.00, img: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=500&auto=format&fit=crop&q=60", sales: 2450 },
+            { name: "JA Solar 550W High-Efficiency Half-Cell PV Module", cat: "Solar Panels", price: 199.00, img: "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=500&auto=format&fit=crop&q=60", sales: 1890 },
+            { name: "Growatt 10kW Three-Phase Hybrid Solar Inverter (SPA)", cat: "Hybrid Inverters", price: 1450.00, img: "https://images.unsplash.com/photo-1592838064567-d85150a25632?w=500&auto=format&fit=crop&q=60", sales: 820 },
+            { name: "Huawei SUN2000-6KTL-M1 High Current Smart Inverter", cat: "Hybrid Inverters", price: 1199.00, img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&auto=format&fit=crop&q=60", sales: 1150 },
+            { name: "Pylontech US5000 4.8kWh LiFePO4 Lithium Battery Stack", cat: "Battery Storage", price: 1599.00, img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=500&auto=format&fit=crop&q=60", sales: 940 },
+            { name: "Tesla Powerwall 3 Integrated Solar Storage Unit (13.5kWh)", cat: "Battery Storage", price: 8999.00, img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500&auto=format&fit=crop&q=60", sales: 430 },
+            { name: "Adjustable Tiled Roof Mounting Kit for 10 Solar Panels", cat: "Mounting & Racks", price: 349.00, img: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=500&auto=format&fit=crop&q=60", sales: 1320 },
+            { name: "Smart 22kW Three-Phase EV Car Charger with OCPP 1.6", cat: "EV Chargers", price: 699.00, img: "https://images.unsplash.com/photo-1647427188172-20c8b3687352?w=500&auto=format&fit=crop&q=60", sales: 780 },
+            { name: "Eastron SDM630 Three-Phase Modbus Smart Utility Meter", cat: "Smart Meters", price: 189.00, img: "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=500&auto=format&fit=crop&q=60", sales: 1640 },
+            { name: "Flotter PV DC Copper Cable 6mm² (100m Roll)", cat: "Mounting & Racks", price: 115.00, img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60", sales: 3100 }
         ];
 
-        // Generate 500 products programmatically
+        // Generate 500 solar products programmatically
         let products = [];
         for (let i = 1; i <= 500; i++) {
             let base = baseProducts[(i - 1) % baseProducts.length];
-            let variation = i > 10 ? ` [Batch #${i}]` : "";
-            let priceOffset = ((i * 13) % 150) - 50;
-            let finalPrice = Math.max(19.00, base.price + priceOffset);
+            let variation = i > 10 ? ` [Batch EU-${i}]` : "";
+            let priceOffset = ((i * 17) % 200) - 80;
+            let finalPrice = Math.max(49.00, base.price + priceOffset);
             products.push({
                 id: i,
                 name: base.name + variation,
                 category: base.cat,
                 price: parseFloat(finalPrice.toFixed(2)),
                 image: base.img,
-                sales: base.sales + (i * 7) % 500,
-                rating: (4.7 + ((i % 3) * 0.1)).toFixed(1)
+                sales: base.sales + (i * 9) % 400,
+                rating: (4.8 + ((i % 3) * 0.05)).toFixed(1)
             });
         }
 
         let cart = [];
         let currentCurrency = 'EUR';
-        let currencyRates = { EUR: 1, USD: 1.08, MYR: 4.82 };
-        let currencySymbols = { EUR: '€', USD: '$', MYR: 'RM' };
+        let currencyRates = { EUR: 1, USD: 1.08, GBP: 0.85 };
+        let currencySymbols = { EUR: '€', USD: '$', GBP: '£' };
         let activeCategory = 'All';
         let searchQuery = '';
 
@@ -322,47 +322,47 @@
             container.innerHTML = `
                 <!-- Hero Section -->
                 <section class="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 py-16 px-4 border-b border-slate-800 overflow-hidden">
-                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#FF5722_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10B981_1px,transparent_1px)] [background-size:16px_16px]"></div>
                     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
                         <div>
                             <span class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 mb-4">
-                                <i class="fa-solid fa-water"></i> 淘梦岛 (Dreamer Island) Official
+                                <i class="fa-solid fa-bolt"></i> SolarGrid EU Direct Distribution
                             </span>
                             <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-                                Professional Diving, Underwater Gear & <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">Automated Trading EAs</span>
+                                High-Efficiency Solar Panels, Hybrid Inverters & <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-400">Smart Utility Systems</span>
                             </h2>
                             <p class="text-slate-400 text-base mb-8 leading-relaxed">
-                                Experience world-class PADI dive courses in Semporna & Dreamer Island, professional DJI underwater camera setups, and algorithmic MetaTrader 5 trading solutions synced directly via EU fulfillment.
+                                Accelerate your renewable energy transition with Tier-1 photovoltaic modules, lithium energy storage, and automated utility grid synchronization across the Netherlands and Belgium.
                             </p>
                             <div class="flex flex-wrap gap-4">
-                                <button onclick="filterByCategory('PADI Diving')" class="bg-primary hover:bg-primaryHover text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center gap-2">
-                                    <i class="fa-solid fa-person-swimming"></i> Explore Dive Packages
+                                <button onclick="filterByCategory('Solar Panels')" class="bg-primary hover:bg-primaryHover text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center gap-2">
+                                    <i class="fa-solid fa-solar-panel"></i> Explore Solar Panels
                                 </button>
-                                <button onclick="filterByCategory('Trading EAs')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold text-sm border border-slate-700 transition flex items-center gap-2">
-                                    <i class="fa-solid fa-robot text-accent"></i> MT5 Expert Advisors
+                                <button onclick="filterByCategory('Battery Storage')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-battery-full text-amber-400"></i> Battery Storage Systems
                                 </button>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
                                 <i class="fa-solid fa-truck-fast text-3xl text-primary mb-3"></i>
-                                <h3 class="font-bold text-white text-base mb-1">1-3 Day EU Delivery</h3>
-                                <p class="text-xs text-slate-400">Automated BigBuy & Droppery pipeline synced to Amazon.nl & Bol.com.</p>
+                                <h3 class="font-bold text-white text-base mb-1">Fast EU Freight</h3>
+                                <p class="text-xs text-slate-400">Automated BigBuy Solar warehouse fulfillment with pallet delivery.</p>
                             </div>
                             <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
                                 <i class="fa-solid fa-shield-check text-3xl text-emerald-400 mb-3"></i>
-                                <h3 class="font-bold text-white text-base mb-1">100% Policy Compliant</h3>
-                                <p class="text-xs text-slate-400">Blind shipping, local EU return addresses, & automated VAT compliance.</p>
+                                <h3 class="font-bold text-white text-base mb-1">25-Year Warranty</h3>
+                                <p class="text-xs text-slate-400">Certified TUV & CE compliant photovoltaic components.</p>
                             </div>
                             <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
-                                <i class="fa-solid fa-star text-3xl text-amber-400 mb-3"></i>
-                                <h3 class="font-bold text-white text-base mb-1">Top Rated Service</h3>
-                                <p class="text-xs text-slate-400">Managed by Desmond Maker with assistants Ken & @序序宝宝.</p>
+                                <i class="fa-solid fa-file-invoice-dollar text-3xl text-amber-400 mb-3"></i>
+                                <h3 class="font-bold text-white text-base mb-1">0% VAT Eligible</h3>
+                                <p class="text-xs text-slate-400">Automatic reverse-charge & private consumer 0% VAT processing.</p>
                             </div>
                             <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
                                 <i class="fa-solid fa-bolt text-3xl text-accent mb-3"></i>
                                 <h3 class="font-bold text-white text-base mb-1">Live Price Sync</h3>
-                                <p class="text-xs text-slate-400">Dynamic 15-minute repricing algorithms maintaining healthy 35% margins.</p>
+                                <p class="text-xs text-slate-400">Automated Amazon.nl and Bol.com channel repricing every 15 mins.</p>
                             </div>
                         </div>
                     </div>
@@ -372,7 +372,7 @@
                 <div class="bg-slate-900 border-b border-slate-800 sticky top-20 z-30 shadow">
                     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto hide-scrollbar">
                         <button onclick="filterByCategory('All')" class="px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${activeCategory === 'All' ? 'bg-primary text-white shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-                            🔥 All Products (500)
+                            🔥 All Solar Items (500)
                         </button>
                         ${categories.map(cat => `
                             <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${activeCategory === cat ? 'bg-primary text-white shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
@@ -396,7 +396,7 @@
                     ${filtered.length === 0 ? `
                         <div class="text-center py-20 bg-slate-900/50 rounded-2xl border border-slate-800">
                             <i class="fa-solid fa-box-open text-5xl text-slate-600 mb-4"></i>
-                            <h4 class="text-lg font-bold text-white mb-2">No products found</h4>
+                            <h4 class="text-lg font-bold text-white mb-2">No solar equipment found</h4>
                             <p class="text-sm text-slate-400">Try searching for another keyword or category.</p>
                         </div>
                     ` : `
@@ -415,11 +415,11 @@
                                     <div class="p-5 flex-1 flex flex-col justify-between">
                                         <div>
                                             <h4 class="font-bold text-white text-sm mb-2 line-clamp-2 group-hover:text-primary transition">${p.name}</h4>
-                                            <p class="text-xs text-slate-400 mb-3"><i class="fa-solid fa-fire text-amber-500 mr-1"></i> ${p.sales}+ sold on Amazon.nl / Bol.com</p>
+                                            <p class="text-xs text-slate-400 mb-3"><i class="fa-solid fa-fire text-amber-500 mr-1"></i> ${p.sales}+ installed via Amazon & Bol</p>
                                         </div>
                                         <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
                                             <div>
-                                                <span class="text-[10px] text-slate-500 block">EU Price</span>
+                                                <span class="text-[10px] text-slate-500 block">EU Price (VAT Incl.)</span>
                                                 <span class="text-lg font-black text-primary">${formatPrice(p.price)}</span>
                                             </div>
                                             <button onclick="addToCart(${p.id})" class="bg-slate-800 hover:bg-primary text-slate-200 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 border border-slate-700 hover:border-primary">
@@ -445,28 +445,28 @@
                             <div class="w-16 h-16 bg-gradient-to-br from-primary to-amber-500 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-black mb-4 shadow-xl glow-effect">
                                 <i class="fa-solid fa-shield-halved"></i>
                             </div>
-                            <h3 class="text-2xl font-black text-white tracking-tight">Merchant Automation Hub</h3>
+                            <h3 class="text-2xl font-black text-white tracking-tight">SolarGrid Automation Hub</h3>
                             <p class="text-xs text-slate-400 mt-1">Password Protected • Amazon.nl & Bol.com Backend</p>
                         </div>
 
                         <form onsubmit="handleHubLogin(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 mb-1">Merchant Username</label>
-                                <input type="text" id="hub-user" required value="Desmond Maker" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
+                                <input type="text" id="hub-user" required value="Jan de Vries (Admin)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 mb-1">Access Password</label>
-                                <input type="password" id="hub-pass" required placeholder="Enter password (e.g. admin123)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
+                                <input type="password" id="hub-pass" required placeholder="Enter password (e.g. solar2026)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
                             </div>
                             <div class="pt-2">
-                                <button type="submit" class="w-full bg-gradient-to-r from-primary to-amber-600 hover:from-primaryHover hover:to-amber-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+                                <button type="submit" class="w-full bg-gradient-to-r from-primary to-emerald-700 hover:from-primaryHover hover:to-emerald-800 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-right-to-bracket"></i> Login to Automation Hub
                                 </button>
                             </div>
                         </form>
 
                         <div class="mt-6 text-center">
-                            <p class="text-[11px] text-slate-500">Hint: Any password works for demo access (e.g., <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">taomeng2026</code>)</p>
+                            <p class="text-[11px] text-slate-500">Hint: Any password works for demo access (e.g., <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">solar2026</code>)</p>
                             <button onclick="switchView('storefront')" class="mt-4 text-xs text-primary hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
                                 <i class="fa-solid fa-arrow-left"></i> Back to Public Storefront
                             </button>
@@ -494,9 +494,9 @@
                                 </div>
                                 <div>
                                     <h3 class="text-2xl font-black text-white flex items-center gap-2">
-                                        Taomeng Automation Hub <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">100% Active</span>
+                                        SolarGrid Automation Hub <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">100% Active</span>
                                     </h3>
-                                    <p class="text-xs text-slate-400">Managing Amazon.nl, Bol.com, BigBuy, Droppery & MT5 EAs • Assistants: Ken & @序序宝宝</p>
+                                    <p class="text-xs text-slate-400">Managing Amazon.nl, Bol.com, BigBuy Solar & Droppery Photovoltaic Inventory Pipelines</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
@@ -513,7 +513,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
                                 <div class="flex justify-between items-center mb-4">
-                                    <span class="text-xs font-semibold text-slate-400">Total Catalog Items</span>
+                                    <span class="text-xs font-semibold text-slate-400">Total Solar Items</span>
                                     <i class="fa-solid fa-boxes-stacked text-primary text-xl"></i>
                                 </div>
                                 <div class="text-3xl font-black text-white mb-1">500</div>
@@ -528,7 +528,7 @@
                                 </div>
                                 <div class="text-3xl font-black text-white mb-1">Amazon & Bol</div>
                                 <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-circle-check"></i> ODR < 1% | Norm 98%+
+                                    <i class="fa-solid fa-circle-check"></i> ODR < 0.5% | Norm 99%+
                                 </div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
@@ -536,9 +536,9 @@
                                     <span class="text-xs font-semibold text-slate-400">Monthly Revenue (Est.)</span>
                                     <i class="fa-solid fa-euro-sign text-amber-400 text-xl"></i>
                                 </div>
-                                <div class="text-3xl font-black text-white mb-1">€24,850</div>
+                                <div class="text-3xl font-black text-white mb-1">€148,200</div>
                                 <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-arrow-trend-up"></i> Net Margin 16.5%
+                                    <i class="fa-solid fa-arrow-trend-up"></i> Net Margin 18.5%
                                 </div>
                             </div>
                             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
@@ -548,7 +548,7 @@
                                 </div>
                                 <div class="text-3xl font-black text-white mb-1">BigBuy / Droppery</div>
                                 <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-bolt"></i> Blind Shipping Active
+                                    <i class="fa-solid fa-bolt"></i> Blind Freight Active
                                 </div>
                             </div>
                         </div>
@@ -560,7 +560,7 @@
                                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
                                     <div class="flex justify-between items-center mb-6">
                                         <h4 class="font-extrabold text-white text-lg flex items-center gap-2">
-                                            <i class="fa-solid fa-rotate text-primary"></i> Multi-Channel Order & Sync Monitor
+                                            <i class="fa-solid fa-rotate text-primary"></i> Multi-Channel Solar Order & Sync Monitor
                                         </h4>
                                         <span class="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full font-bold">Auto-Polling 15m</span>
                                     </div>
@@ -570,30 +570,30 @@
                                                 <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">NL</div>
                                                 <div>
                                                     <h5 class="font-bold text-white text-sm">Amazon.nl Professional Store</h5>
-                                                    <p class="text-xs text-slate-400">Order #302-9841290-092 • PADI Open Water Course</p>
+                                                    <p class="text-xs text-slate-400">Order #302-8841290-019 • Growatt 10kW Hybrid Inverter</p>
                                                 </div>
                                             </div>
-                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Fulfilled via BigBuy</span>
+                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Fulfilled via BigBuy Solar</span>
                                         </div>
                                         <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center font-bold">BOL</div>
                                                 <div>
                                                     <h5 class="font-bold text-white text-sm">Bol.com Partner Platform</h5>
-                                                    <p class="text-xs text-slate-400">Order #B2026-88319 • DJI Osmo Action 6 Kit</p>
+                                                    <p class="text-xs text-slate-400">Order #B2026-99312 • 450W Bifacial Solar Panels (Pallet of 12)</p>
                                                 </div>
                                             </div>
                                             <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Tracking Synced</span>
                                         </div>
                                         <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">MT5</div>
+                                                <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">BAT</div>
                                                 <div>
-                                                    <h5 class="font-bold text-white text-sm">MQL5 Trading EA License Delivery</h5>
-                                                    <p class="text-xs text-slate-400">Apex Sentinel Automated Cent Account Activation</p>
+                                                    <h5 class="font-bold text-white text-sm">Pylontech US5000 4.8kWh Battery Unit</h5>
+                                                    <p class="text-xs text-slate-400">Automated Stock Sync & Serial Number Logging</p>
                                                 </div>
                                             </div>
-                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Instant API Delivery</span>
+                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">API Dispatched</span>
                                         </div>
                                     </div>
                                 </div>
@@ -606,19 +606,19 @@
                                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                                         <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
                                             <span class="text-xs text-slate-400 block mb-1">Target Gross Margin</span>
-                                            <span class="text-xl font-black text-white">35% - 45%</span>
+                                            <span class="text-xl font-black text-white">30% - 40%</span>
                                         </div>
                                         <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
                                             <span class="text-xs text-slate-400 block mb-1">Platform Commission</span>
-                                            <span class="text-xl font-black text-white">7% - 15%</span>
+                                            <span class="text-xl font-black text-white">8% - 12%</span>
                                         </div>
                                         <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
                                             <span class="text-xs text-slate-400 block mb-1">Stock Buffer Threshold</span>
-                                            <span class="text-xl font-black text-amber-400">&lt; 5 Units (Out)</span>
+                                            <span class="text-xl font-black text-amber-400">&lt; 3 Units (Out)</span>
                                         </div>
                                     </div>
                                     <p class="text-xs text-slate-400 leading-relaxed">
-                                        Formula: <code class="bg-slate-800 text-slate-200 px-2 py-1 rounded border border-slate-700 font-mono">Markup = (Supplier Cost + Shipping) / (1 - Target Margin % - Commission %)</code>. Automatically updates every 15 minutes via ChannelEngine and AutoDS middleware.
+                                        Formula: <code class="bg-slate-800 text-slate-200 px-2 py-1 rounded border border-slate-700 font-mono">Markup = (Supplier Cost + Freight) / (1 - Target Margin % - Commission %)</code>. Automatically updates every 15 minutes via ChannelEngine and AutoDS middleware.
                                     </p>
                                 </div>
                             </div>
@@ -627,28 +627,28 @@
                             <div class="space-y-8">
                                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
                                     <h4 class="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-users text-emerald-400"></i> Team & Operations
+                                        <i class="fa-solid fa-users text-emerald-400"></i> Utility Management Team
                                     </h4>
                                     <div class="space-y-3">
                                         <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
-                                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white text-sm">DM</div>
+                                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white text-sm">JV</div>
                                             <div>
-                                                <h5 class="font-bold text-white text-xs">Desmond Arthur Maker</h5>
-                                                <p class="text-[10px] text-slate-400">Founder & Dive Agent Lead</p>
+                                                <h5 class="font-bold text-white text-xs">Jan de Vries</h5>
+                                                <p class="text-[10px] text-slate-400">Managing Director & Operations</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
-                                            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center font-bold text-white text-sm">KEN</div>
+                                            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center font-bold text-white text-sm">BS</div>
                                             <div>
-                                                <h5 class="font-bold text-white text-xs">Ken</h5>
-                                                <p class="text-[10px] text-slate-400">Assistant • Customer Support</p>
+                                                <h5 class="font-bold text-white text-xs">Bram Smits</h5>
+                                                <p class="text-[10px] text-slate-400">Technical Support & Inverters</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
-                                            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white text-sm">序</div>
+                                            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white text-sm">LV</div>
                                             <div>
-                                                <h5 class="font-bold text-white text-xs">@序序宝宝</h5>
-                                                <p class="text-[10px] text-slate-400">Assistant • Operations & Bookings</p>
+                                                <h5 class="font-bold text-white text-xs">Lotte Van Den Berg</h5>
+                                                <p class="text-[10px] text-slate-400">Logistics & Bol.com Fulfillment</p>
                                             </div>
                                         </div>
                                     </div>
@@ -656,12 +656,12 @@
 
                                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
                                     <h4 class="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-location-dot text-red-400"></i> Location & Branding
+                                        <i class="fa-solid fa-location-dot text-red-400"></i> Entity & Compliance
                                     </h4>
                                     <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-2">
-                                        <div class="text-xs text-slate-300 font-semibold">Exact Branding Location:</div>
-                                        <div class="text-sm font-black text-primary">淘梦岛 (Dreamer Island)</div>
-                                        <p class="text-xs text-slate-400">Semporna / Kota Kinabalu, Sabah, Malaysia & Amsterdam, Netherlands EU Return Depot.</p>
+                                        <div class="text-xs text-slate-300 font-semibold">Registered Entity:</div>
+                                        <div class="text-sm font-black text-primary">SolarGrid EU B.V. (KvK: 89432109)</div>
+                                        <p class="text-xs text-slate-400">Rotterdam Port Depot & Amsterdam Returns Center, Netherlands.</p>
                                     </div>
                                 </div>
                             </div>
@@ -681,7 +681,6 @@
         function changeCurrency(curr) {
             currentCurrency = curr;
             renderCartDrawer();
-            // Re-render current view if storefront is open
             if(document.querySelector('.grid-cols-1.sm\\:grid-cols-2')) {
                 renderStorefront(document.getElementById('app-main-container'));
             }
@@ -735,14 +734,14 @@
                 container.innerHTML = `
                     <div class="text-center py-16 text-slate-500">
                         <i class="fa-solid fa-cart-shopping text-4xl mb-3"></i>
-                        <p class="text-sm">Your cart is currently empty.</p>
+                        <p class="text-sm">Your solar cart is currently empty.</p>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = cart.map(item => `
-                py-4 flex items-center justify-between gap-4">
+                <div class="py-4 flex items-center justify-between gap-4">
                     <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl bg-slate-800">
                     <div class="flex-1">
                         <h5 class="font-bold text-white text-xs line-clamp-1 mb-1">${item.name}</h5>
@@ -794,7 +793,7 @@
 
         function handleCheckoutSubmit(e) {
             e.preventDefault();
-            alert('Order successfully placed and routed via BigBuy / Droppery EU Warehouse API! Synced with Amazon.nl & Bol.com fulfillment pipeline.');
+            alert('Order successfully placed and routed via BigBuy Solar & Droppery Warehouse API! Synced with Amazon.nl & Bol.com fulfillment pipelines.');
             cart = [];
             updateCartBadge();
             closeCheckoutModal();
