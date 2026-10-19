@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Automation Hub: Amazon.nl & Bol.com Blueprint</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#090d16',
+                        cardbg: '#111827',
+                        cardhover: '#1f2937',
+                        accentblue: '#3b82f6',
+                        accentemerald: '#10b981',
+                        accentpurple: '#8b5cf6',
+                        accentamber: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for interactive analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-blue {
+            box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.3);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 border-b border-slate-800 bg-darkbg/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center glow-blue">
+                    <i data-lucide="cpu" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">NL & BE Automation Hub</span>
+                    <span class="block text-xs text-slate-400">Amazon.nl & Bol.com Executive Suite</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center space-x-2 bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>APIs Connected: AutoDS, ChannelEngine, BigBuy</span>
+                </div>
+                <button onclick="showNotification('System sync active. All store endpoints responding normally.', 'success')" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Shell -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 shrink-0">
+            <div class="sticky top-24 space-y-1 bg-cardbg p-3 rounded-2xl border border-slate-800 shadow-xl">
+                <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Navigation</div>
+                
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition bg-blue-600 text-white shadow-lg shadow-blue-600/30">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Dashboard & Metrics</span>
+                </button>
+                
+                <button onclick="switchTab('canvas')" id="nav-canvas" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    <span>Business Model Canvas</span>
+                </button>
+
+                <button onclick="switchTab('comparison')" id="nav-comparison" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition">
+                    <i data-lucide="scale" class="w-4 h-4"></i>
+                    <span>Platform Comparison</span>
+                </button>
+
+                <button onclick="switchTab('roadmap')" id="nav-roadmap" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition">
+                    <i data-lucide="git-merge" class="w-4 h-4"></i>
+                    <span>Implementation Roadmap</span>
+                </button>
+
+                <button onclick="switchTab('hub')" id="nav-hub" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition">
+                    <i data-lucide="sliders" class="w-4 h-4"></i>
+                    <span>Automation & Risk Hub</span>
+                </button>
+
+                <div class="pt-4 mt-4 border-t border-slate-800 px-3">
+                    <div class="text-xs text-slate-400 font-medium">Quick Health Score</div>
+                    <div class="mt-2 flex items-center justify-between text-sm">
+                        <span class="text-slate-300">Amazon ODR:</span>
+                        <span class="text-emerald-400 font-semibold">&lt; 0.4%</span>
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-sm">
+                        <span class="text-slate-300">Bol Service Score:</span>
+                        <span class="text-emerald-400 font-semibold">9.4 / 10</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 min-w-0">
+
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Welcome Banner -->
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-900/40 via-cardbg to-emerald-900/40 p-6 sm:p-8 border border-slate-800">
+                    <div class="relative z-10">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-3">
+                            <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                            <span>Automated Benelux Operations</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">E-Commerce Executive Summary & Control Center</h1>
+                        <p class="mt-2 text-slate-300 text-sm max-w-2xl">
+                            Overseeing automated fulfillment, repricing rules, and compliance across Amazon.nl and Bol.com using vetted European suppliers (BigBuy, Droppery, Spocket).
+                        </p>
+                    </div>
+                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+
+                <!-- Top Metric Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400 text-xs font-medium uppercase tracking-wider">Projected Monthly Rev</span>
+                            <div class="p-2 rounded-xl bg-blue-500/10 text-blue-400"><i data-lucide="trending-up" class="w-4 h-4"></i></div>
+                        </div>
+                        <div class="mt-3 flex items-baseline justify-between">
+                            <span class="text-2xl font-bold text-white">€48,500</span>
+                            <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">+18.4% MoM</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400">Combined Amazon.nl & Bol.com</div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400 text-xs font-medium uppercase tracking-wider">Target Gross Margin</span>
+                            <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400"><i data-lucide="percent" class="w-4 h-4"></i></div>
+                        </div>
+                        <div class="mt-3 flex items-baseline justify-between">
+                            <span class="text-2xl font-bold text-white">38.5%</span>
+                            <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Goal: 30-45%</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400">Optimized via Auto Repricer</div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400 text-xs font-medium uppercase tracking-wider">Net Profit Margin</span>
+                            <div class="p-2 rounded-xl bg-purple-500/10 text-purple-400"><i data-lucide="wallet" class="w-4 h-4"></i></div>
+                        </div>
+                        <div class="mt-3 flex items-baseline justify-between">
+                            <span class="text-2xl font-bold text-white">15.2%</span>
+                            <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Goal: 12-18%</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400">After fees & return buffer</div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400 text-xs font-medium uppercase tracking-wider">Active Listings Sync</span>
+                            <div class="p-2 rounded-xl bg-amber-500/10 text-amber-400"><i data-lucide="layers" class="w-4 h-4"></i></div>
+                        </div>
+                        <div class="mt-3 flex items-baseline justify-between">
+                            <span class="text-2xl font-bold text-white">1,420</span>
+                            <span class="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">15m interval</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400">Zero stockouts buffer active</div>
+                    </div>
+                </div>
+
+                <!-- Charts & Breakdown Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Cost Structure Breakdown -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col">
+                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <i data-lucide="pie-chart" class="w-5 h-5 text-blue-400"></i>
+                            <span>Cost & Margin Structure Breakdown</span>
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Allocation of revenue across supplier costs, platform fees, and net profit.</p>
+                        
+                        <div class="relative flex-1 min-h-[260px] flex items-center justify-center mt-4">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Platform Health & Compliance Status -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"><span>Compliance & Health Hub</span></i>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Real-time tracking of platform norms for Amazon.nl and Bol.com.</p>
+                        </div>
+
+                        <div class="space-y-4 my-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-300 font-medium">Amazon Order Defect Rate (ODR)</span>
+                                    <span class="text-emerald-400 font-bold">&lt; 0.4% (Norm &lt; 1%)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 40%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-300 font-medium">Bol.com Service Standard (Servicenormen)</span>
+                                    <span class="text-emerald-400 font-bold">9.4 / 10 (Norm &gt; 8.0)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 94%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-300 font-medium">On-Time Delivery Reliability</span>
+                                    <span class="text-emerald-400 font-bold">96.8% (Norm &gt; 93%)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 96.8%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex items-center space-x-3">
+                            <i data-lucide="info" class="w-5 h-5 text-blue-400 shrink-0"></i>
+                            <span class="text-xs text-slate-300">All automation endpoints are fully synchronized. Blind shipping protocols active for BigBuy & Droppery.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: BUSINESS MODEL CANVAS -->
+            <div id="tab-canvas" class="tab-content hidden space-y-6">
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800">
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-blue-400"></i>
+                        <span>Core Business Model Canvas</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">Architectural overview of the automated e-commerce enterprise targeting the Netherlands and Belgium.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Value Proposition -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3 text-blue-400">
+                            <div class="p-2 rounded-xl bg-blue-500/10"><i data-lucide="award" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-white text-base">1. Value Proposition</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Fast EU Delivery:</strong> 1–3 business days within NL/BE via EU-based supplier warehouses.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Localization:</strong> Native Dutch customer experience, support, and local product standards.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Competitive Pricing:</strong> Automated repricing algorithms maintaining margins against buy-box competitors.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Revenue & Financial Model -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3 text-emerald-400">
+                            <div class="p-2 rounded-xl bg-emerald-500/10"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-white text-base">2. Revenue & Financial Model</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Revenue Streams:</strong> Retail margins from sales on Amazon.nl and Bol.com.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Target Margins:</strong> Gross margin 30%–45%; Net margin after fees & returns 12%–18%.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Cost Structure:</strong> Fixed monthly tools (€50–€200/mo), variable wholesale item prices & 7-15% platform commissions.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Compliance Framework -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3 text-purple-400">
+                            <div class="p-2 rounded-xl bg-purple-500/10"><i data-lucide="shield" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-white text-base">3. Compliance Framework</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Seller of Record (SoR):</strong> Registered business name on all invoices, packing slips, and shipping labels.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>Blind Shipping:</strong> Plain, unbranded packaging with zero third-party/retailer marketing.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                                <span><strong>VAT Compliance:</strong> Dutch Chamber of Commerce (KvK) registration and EU VAT setup (OSS for cross-border EU sales).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: PLATFORM COMPARISON -->
+            <div id="tab-comparison" class="tab-content hidden space-y-6">
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800">
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="scale" class="w-5 h-5 text-blue-400"></i>
+                        <span>Platform Comparison Matrix: Amazon.nl vs. Bol.com</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">Detailed evaluation of fees, logistics limits, automation middleware, and performance metrics.</p>
+                </div>
+
+                <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 bg-slate-900/80 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                    <th class="p-4">Feature / Metric</th>
+                                    <th class="p-4 text-blue-400">Amazon Netherlands (Amazon.nl)</th>
+                                    <th class="p-4 text-emerald-400">Bol.com (NL & BE)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-sm text-slate-300">
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Market Position</td>
+                                    <td class="p-4">Rapidly growing global entrant</td>
+                                    <td class="p-4 font-semibold text-emerald-400">Dominant market leader in NL/BE</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Account Monthly Fee</td>
+                                    <td class="p-4">€39.00 / month (Professional)</td>
+                                    <td class="p-4">€0 / month (Commission-based only)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Delivery Time Limits</td>
+                                    <td class="p-4">Strict Late Ship Rate (&lt; 4%)</td>
+                                    <td class="p-4">High speed expected ("Vóór 23:59 besteld...")</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Main Automation Middleware</td>
+                                    <td class="p-4">AutoDS, Spark Shipping, SellerLogic</td>
+                                    <td class="p-4">ChannelEngine, EffectConnect, Stock2Phant</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Return Policy Requirements</td>
+                                    <td class="p-4">30-day return window</td>
+                                    <td class="p-4">30-day return window (Free returns for customer)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40 transition">
+                                    <td class="p-4 font-medium text-white">Key Performance Metric</td>
+                                    <td class="p-4 font-mono text-amber-400">Order Defect Rate (ODR) &lt; 1%</td>
+                                    <td class="p-4 font-mono text-emerald-400">Servicenormen (Service score &gt;= 8.0)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: IMPLEMENTATION ROADMAP -->
+            <div id="tab-roadmap" class="tab-content hidden space-y-6">
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                            <i data-lucide="git-merge" class="w-5 h-5 text-blue-400"></i>
+                            <span>Implementation Roadmap & Checklists</span>
+                        </h2>
+                        <p class="text-sm text-slate-400 mt-1">Interactive progress builder for setting up Amazon.nl and Bol.com automated stores.</p>
+                    </div>
+                    <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
+                        <button onclick="switchRoadmapTab('amazon')" id="btn-rm-amazon" class="px-4 py-2 rounded-lg text-xs font-semibold transition bg-blue-600 text-white">Amazon.nl Track</button>
+                        <button onclick="switchRoadmapTab('bol')" id="btn-rm-bol" class="px-4 py-2 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-white">Bol.com Track</button>
+                    </div>
+                </div>
+
+                <!-- Amazon Roadmap Track -->
+                <div id="track-amazon" class="roadmap-track space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Phase 1</span>
+                            <h3 class="text-base font-bold text-white mt-1">Setup & Legal</h3>
+                            <p class="text-xs text-slate-400 mt-1">KvK, VAT, Professional Account, Return Center.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Phase 2</span>
+                            <h3 class="text-base font-bold text-white mt-1">Tech Integration</h3>
+                            <p class="text-xs text-slate-400 mt-1">Middleware APIs, Dynamic pricing, Stock sync.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Phase 3</span>
+                            <h3 class="text-base font-bold text-white mt-1">Launch & Scaling</h3>
+                            <p class="text-xs text-slate-400 mt-1">Auto-fulfillment, ODR monitoring, catalog scaling.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist Items -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-white text-base">Amazon.nl Step-by-Step Execution Checklist</h3>
+                        <div class="space-y-3" id="checklist-amazon">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bol.com Roadmap Track -->
+                <div id="track-bol" class="roadmap-track hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Phase 1</span>
+                            <h3 class="text-base font-bold text-white mt-1">Onboarding & Partner Setup</h3>
+                            <p class="text-xs text-slate-400 mt-1">Bol Zakelijk, IBAN, Service commitment.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Phase 2</span>
+                            <h3 class="text-base font-bold text-white mt-1">Middleware & EAN Mapping</h3>
+                            <p class="text-xs text-slate-400 mt-1">ChannelEngine, GS1 EAN validation, catalog routing.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Phase 3</span>
+                            <h3 class="text-base font-bold text-white mt-1">Automated Operations</h3>
+                            <p class="text-xs text-slate-400 mt-1">Tracking injection, free returns automation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist Items -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-white text-base">Bol.com Step-by-Step Execution Checklist</h3>
+                        <div class="space-y-3" id="checklist-bol">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: AUTOMATION & RISK HUB -->
+            <div id="tab-hub" class="tab-content hidden space-y-6">
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800">
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="sliders" class="w-5 h-5 text-blue-400"></i>
+                        <span>Automation & Risk Management Hub</span>
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">Configure live markup calculators, inventory buffer thresholds, and white-label rules.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Live Pricing Calculator -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                                <i data-lucide="calculator" class="w-5 h-5 text-emerald-400"></i>
+                                <span>Markup Formula Calculator</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Formula: <code class="text-blue-400 font-mono">(Cost + Shipping) / (1 - Target Margin - Commission)</code></p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Supplier Wholesale Item Cost (€)</label>
+                                <input type="number" id="calc-cost" value="25.00" step="0.50" oninput="calculatePricing()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Estimated Shipping Cost (€)</label>
+                                <input type="number" id="calc-shipping" value="4.50" step="0.50" oninput="calculatePricing()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Target Net Margin (%)</label>
+                                    <input type="number" id="calc-margin" value="20" step="1" oninput="calculatePricing()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Platform Commission (%)</label>
+                                    <input type="number" id="calc-commission" value="12" step="1" oninput="calculatePricing()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result Box -->
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Recommended Retail Price</span>
+                                <span id="res-retail" class="text-2xl font-extrabold text-emerald-400 font-mono">€54.17</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400 block">Estimated Net Profit</span>
+                                <span id="res-profit" class="text-lg font-bold text-white font-mono">€10.83</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Controls & Buffers -->
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                                <i data-lucide="shield-alert" class="w-5 h-5 text-amber-400"></i>
+                                <span>Risk Mitigation & Inventory Buffers</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Configure automated rules to protect store health and prevent out-of-stock penalties.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                <div>
+                                    <span class="text-sm font-medium text-white block">Inventory Safety Threshold</span>
+                                    <span class="text-xs text-slate-400">Mark item "Out of Stock" when supplier stock &lt; threshold</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="number" id="buf-threshold" value="5" class="w-16 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-center text-white text-sm">
+                                    <span class="text-xs text-slate-400">units</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                <div>
+                                    <span class="text-sm font-medium text-white block">Blind White-Label Packaging</span>
+                                    <span class="text-xs text-slate-400">Enforce custom packing slips with business name</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                <div>
+                                    <span class="text-sm font-medium text-white block">Auto Customer Support (eDesk / Templates)</span>
+                                    <span class="text-xs text-slate-400">Respond to Dutch inquiries in &lt; 24h</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button onclick="showNotification('Automation rules successfully saved and pushed to API endpoints.', 'success')" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/20 transition flex items-center justify-center space-x-2">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            <span>Save & Deploy Automation Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 mt-12 bg-darkbg text-center text-xs text-slate-500">
+        <p>Automated E-Commerce Business Blueprint: Amazon.nl & Bol.com Executive Suite &bull; Powered by EU Middleware & Vetted Suppliers</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Remove active states from nav
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/30');
+                el.classList.add('text-slate-400', 'hover:text-slate-100', 'hover:bg-slate-800/60');
+            });
+
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            // Activate button
+            const activeBtn = document.getElementById('nav-' + tabId);
+            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/30');
+            activeBtn.classList.remove('text-slate-400', 'hover:text-slate-100', 'hover:bg-slate-800/60');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Roadmap Track Switching
+        function switchRoadmapTab(track) {
+            if (track === 'amazon') {
+                document.getElementById('track-amazon').classList.remove('hidden');
+                document.getElementById('track-bol').classList.add('hidden');
+                document.getElementById('btn-rm-amazon').className = "px-4 py-2 rounded-lg text-xs font-semibold transition bg-blue-600 text-white";
+                document.getElementById('btn-rm-bol').className = "px-4 py-2 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-white";
+            } else {
+                document.getElementById('track-amazon').classList.add('hidden');
+                document.getElementById('track-bol').classList.remove('hidden');
+                document.getElementById('btn-rm-amazon').className = "px-4 py-2 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-white";
+                document.getElementById('btn-rm-bol').className = "px-4 py-2 rounded-lg text-xs font-semibold transition bg-emerald-600 text-white";
+            }
+        }
+
+        // Checklist Data & Render
+        const amazonChecklist = [
+            { id: 'amz-1', title: 'Register Dutch KvK & Obtain EU VAT Number', desc: 'Establish legal entity and tax compliance for cross-border EU sales.' },
+            { id: 'amz-2', title: 'Open Professional Seller Account on sell.amazon.nl', desc: 'Required for SP-API developer access and automated repricing middleware.' },
+            { id: 'amz-3', title: 'Setup EU Return Infrastructure', desc: 'Partner with Active Ants or local parcel forwarder for local EU return address.' },
+            { id: 'amz-4', title: 'Connect Supplier Feed (BigBuy / Droppery / CJ)', desc: 'Filter for stock > 50 units and 1-3 day delivery SLAs.' },
+            { id: 'amz-5', title: 'Configure AutoDS / Spark Shipping Middleware', desc: 'Set 15-minute stock sync interval and auto-purchase rules.' },
+            { id: 'amz-6', title: 'Monitor Order Defect Rate (ODR)', desc: 'Keep pre-fulfillment cancellation rate strictly below 2.5%.' }
+        ];
+
+        const bolChecklist = [
+            { id: 'bol-1', title: 'Register Bol Zakelijk Partner Account', desc: 'Requires KvK and Dutch/Belgian VAT registration.' },
+            { id: 'bol-2', title: 'Connect Business IBAN Bank Account', desc: 'Ensure payouts route directly to your verified corporate bank.' },
+            { id: 'bol-3', title: 'Integrate ChannelEngine or EffectConnect', desc: 'Map supplier product codes directly to Bol GS1 EAN catalog database.' },
+            { id: 'bol-4', title: 'Configure Automated Order Routing & Tracking', desc: 'Ensure instant API order placement and tracking code injection.' },
+            { id: 'bol-5', title: 'Set Up Free Returns Portal', desc: 'Configure return settings to auto-generate labels with your EU return center.' },
+            { id: 'bol-6', title: 'Maintain Service Standard (Servicenormen >= 8.0)', desc: 'Ensure shipping reliability >= 93% and response times < 24 hours.' }
+        ];
+
+        function renderChecklists() {
+            const amzContainer = document.getElementById('checklist-amazon');
+            amzContainer.innerHTML = amazonChecklist.map(item => `
+                <div class="flex items-start space-x-3 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+                    <input type="checkbox" id="${item.id}" onchange="showNotification('${item.title} status updated', 'success')" class="mt-1 w-4 h-4 rounded bg-slate-800 border-slate-700 text-blue-600 focus:ring-blue-500">
+                    <label for="${item.id}" class="cursor-pointer">
+                        <span class="text-sm font-medium text-white block">${item.title}</span>
+                        <span class="text-xs text-slate-400">${item.desc}</span>
+                    </label>
+                </div>
+            `).join('');
+
+            const bolContainer = document.getElementById('checklist-bol');
+            bolContainer.innerHTML = bolChecklist.map(item => `
+                <div class="flex items-start space-x-3 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+                    <input type="checkbox" id="${item.id}" onchange="showNotification('${item.title} status updated', 'success')" class="mt-1 w-4 h-4 rounded bg-slate-800 border-slate-700 text-emerald-600 focus:ring-emerald-500">
+                    <label for="${item.id}" class="cursor-pointer">
+                        <span class="text-sm font-medium text-white block">${item.title}</span>
+                        <span class="text-xs text-slate-400">${item.desc}</span>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        renderChecklists();
+
+        // Calculator Logic
+        function calculatePricing() {
+            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
+            const shipping = parseFloat(document.getElementById('calc-shipping').value) || 0;
+            const targetMargin = (parseFloat(document.getElementById('calc-margin').value) || 0) / 100;
+            const commission = (parseFloat(document.getElementById('calc-commission').value) || 0) / 100;
+
+            const totalItemCost = cost + shipping;
+            const denominator = 1 - targetMargin - commission;
+
+            let retailPrice = 0;
+            if (denominator > 0) {
+                retailPrice = totalItemCost / denominator;
+            }
+
+            const netProfit = retailPrice * targetMargin;
+
+            document.getElementById('res-retail').innerText = '€' + retailPrice.toFixed(2);
+            document.getElementById('res-profit').innerText = '€' + netProfit.toFixed(2);
+        }
+
+        calculatePricing();
+
+        // Toast Notification System
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-xl text-sm transition transform translate-y-2 opacity-0 duration-300 ${
+                type === 'success' ? 'bg-slate-900 border-emerald-500/40 text-emerald-400' : 'bg-slate-900 border-blue-500/40 text-blue-400'
+            }`;
+            
+            toast.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4 shrink-0"></i>
+                <span class="text-slate-200">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Initialize Chart.js Cost Breakdown Donut Chart
+        window.addEventListener('load', () => {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Supplier Wholesale Cost', 'Platform Commission (7-15%)', 'Shipping & Logistics', 'Net Profit Margin', 'Return Buffer & Tools'],
+                    datasets: [{
+                        data: [42, 12, 15, 16, 15],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#8b5cf6',
+                            '#f59e0b',
+                            '#10b981',
+                            '#64748b'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#94a3b8',
+                                font: { size: 11, family: 'Inter' },
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
