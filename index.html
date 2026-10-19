@@ -39,7 +39,7 @@
         .flash-badge { animation: flashAnim 1.5s infinite ease-in-out; }
     </style>
 </head>
-<body class="bg-[#0B0F19] text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-16 md:pb-0 selection:bg-primary selection:text-white">
+<body class="bg-[#0B0F19] text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-20 md:pb-0 selection:bg-primary selection:text-white">
 
     <!-- Top Announcement Bar (Temu/Shopee Style) -->
     <div class="bg-gradient-to-r from-orange-600 via-red-600 to-amber-600 text-white text-[11px] py-1.5 px-3 font-bold flex justify-between items-center z-50 shadow-md">
@@ -58,42 +58,55 @@
         </div>
     </div>
 
-    <!-- Sticky Mobile & Desktop Header -->
+    <!-- Temu Style Header with Prominent Search Bar -->
     <header class="sticky top-0 bg-[#131C2E]/95 backdrop-blur-md border-b border-slate-800 z-40 transition-all shadow-xl">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             
-            <!-- Brand Logo -->
-            <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('storefront')">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-amber-500 flex items-center justify-center text-white font-black text-xl sm:text-2xl shadow-lg">
-                    <i class="fa-solid fa-solar-panel"></i>
+            <!-- Brand Logo & Cart Row for Mobile -->
+            <div class="w-full sm:w-auto flex items-center justify-between">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('storefront')">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-amber-500 flex items-center justify-center text-white font-black text-xl sm:text-2xl shadow-lg">
+                        <i class="fa-solid fa-solar-panel"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-base sm:text-xl tracking-tight text-white flex items-center gap-1">
+                            SolarGrid <span class="text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded bg-primary/20 text-primary border border-primary/40">EU Direct</span>
+                        </h1>
+                        <p class="text-[10px] text-slate-400 hidden sm:block">Photovoltaic Panels • Inverters • Smart Storage</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="font-black text-base sm:text-xl tracking-tight text-white flex items-center gap-1">
-                        SolarGrid <span class="text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded bg-primary/20 text-primary border border-primary/40">EU Direct</span>
-                    </h1>
-                    <p class="text-[10px] text-slate-400 hidden sm:block">Photovoltaic Panels • Inverters • Smart Storage</p>
-                </div>
-            </div>
 
-            <!-- Instant Search Bar (Temu Style) -->
-            <div class="flex-1 max-w-xl mx-1 sm:mx-4">
-                <div class="relative w-full">
-                    <input type="text" id="main-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ solar modules, inverters, batteries..." class="w-full bg-[#0B0F19] text-slate-100 pl-9 sm:pl-11 pr-20 sm:pr-24 py-2 sm:py-2.5 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-xs sm:text-sm shadow-inner transition">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 sm:left-4 top-3 sm:top-3.5 text-slate-400 text-xs sm:text-sm"></i>
-                    <button onclick="handleSearch(document.getElementById('main-search-input').value)" class="absolute right-1 top-1 bg-primary hover:bg-primaryDark text-white px-3 sm:px-5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition shadow">
-                        Search
+                <!-- Mobile Header Right Actions -->
+                <div class="flex items-center gap-2 sm:hidden">
+                    <button onclick="switchView('hub-login')" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-200 text-xs font-bold border border-slate-700">
+                        <i class="fa-solid fa-gauge-high text-amber-400"></i>
+                    </button>
+                    <button onclick="toggleCartDrawer()" class="relative flex items-center gap-1 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold shadow-lg">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span id="cart-badge-mobile" class="bg-white text-primary rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Header Action Icons -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                <button onclick="switchView('hub-login')" class="hidden md:flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700">
-                    <i class="fa-solid fa-gauge-high text-amber-400"></i> Hub
+            <!-- Prominent Temu-Style Full-Width Search Bar -->
+            <div class="w-full sm:flex-1 sm:max-w-2xl sm:mx-4">
+                <div class="relative w-full shadow-lg">
+                    <input type="text" id="main-search-input" oninput="handleSearch(this.value)" placeholder="🔍 Search 500+ solar panels, inverters, lithium batteries..." class="w-full bg-[#0B0F19] text-slate-100 pl-11 pr-28 py-3.5 sm:py-3 rounded-full border-2 border-primary focus:outline-none focus:bg-slate-900 text-sm font-medium transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 sm:top-3.5 text-primary text-base"></i>
+                    <button onclick="handleSearch(document.getElementById('main-search-input').value)" class="absolute right-1.5 top-1.5 bottom-1.5 bg-gradient-to-r from-primary to-red-600 hover:from-primaryDark hover:to-red-700 text-white px-5 rounded-full text-xs font-black transition shadow flex items-center gap-1">
+                        <span>Search</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Desktop Header Right Actions -->
+            <div class="hidden sm:flex items-center gap-3">
+                <button onclick="switchView('hub-login')" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700">
+                    <i class="fa-solid fa-gauge-high text-amber-400"></i> Merchant Hub
                 </button>
-                <button onclick="toggleCartDrawer()" class="relative flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl bg-primary hover:bg-primaryDark text-white text-xs font-bold transition shadow-lg">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="hidden sm:inline">Cart</span>
+                <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primaryDark text-white text-xs font-bold transition shadow-lg">
+                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                    <span>Cart</span>
                     <span id="cart-badge" class="bg-white text-primary rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
                 </button>
             </div>
@@ -262,11 +275,13 @@
         let currencySymbols = { EUR: '€', USD: '$', GBP: '£' };
         let activeCategory = 'All';
         let searchQuery = '';
+        let selectedProduct = null;
 
         // --- NAVIGATION & ROUTER ---
         function switchView(viewName) {
             const mainContainer = document.getElementById('app-main-container');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            selectedProduct = null;
 
             if (viewName === 'storefront') {
                 renderStorefront(mainContainer);
@@ -274,6 +289,8 @@
                 renderHubLogin(mainContainer);
             } else if (viewName === 'hub-dashboard') {
                 renderHubDashboard(mainContainer);
+            } else if (viewName === 'product-detail') {
+                renderProductDetail(mainContainer);
             }
         }
 
@@ -286,7 +303,12 @@
             btn.classList.add('text-primary');
         }
 
-        // --- STOREFRONT RENDERER (Temu/Shopee Mobile-First Grid) ---
+        function openProductDetail(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            switchView('product-detail');
+        }
+
+        // --- STOREFRONT RENDERER ---
         function renderStorefront(container) {
             let filtered = products.filter(p => {
                 let matchesCat = activeCategory === 'All' || p.category === activeCategory;
@@ -315,7 +337,7 @@
                 </section>
 
                 <!-- Category Horizontal Scroll (Shopee Style) -->
-                <div class="sticky top-16 sm:top-20 bg-[#131C2E]/95 backdrop-blur z-30 border-b border-slate-800 shadow">
+                <div class="sticky top-20 sm:top-24 bg-[#131C2E]/95 backdrop-blur z-30 border-b border-slate-800 shadow">
                     <div class="max-w-7xl mx-auto px-3 py-3 flex items-center gap-2 overflow-x-auto hide-scrollbar">
                         <button onclick="filterByCategory('All')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${activeCategory === 'All' ? 'bg-primary text-white shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
                             🔥 All Items (500)
@@ -328,7 +350,7 @@
                     </div>
                 </div>
 
-                <!-- Products Grid (Mobile 2 Cols, Desktop 4 Cols) -->
+                <!-- Products Grid -->
                 <section class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 flex-1 w-full">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-base sm:text-xl font-black text-white flex items-center gap-2">
@@ -345,7 +367,7 @@
                     ` : `
                         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                             ${filtered.map(p => `
-                                <div class="bg-[#131C2E] border border-slate-800/80 rounded-2xl overflow-hidden shadow-lg hover:border-primary/50 transition duration-300 flex flex-col group">
+                                <div onclick="openProductDetail(${p.id})" class="bg-[#131C2E] border border-slate-800/80 rounded-2xl overflow-hidden shadow-lg hover:border-primary/50 transition duration-300 flex flex-col group cursor-pointer">
                                     <div class="relative h-36 sm:h-48 overflow-hidden bg-slate-900">
                                         <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                                         <div class="absolute top-2 left-2 bg-primary text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-md shadow">
@@ -357,7 +379,7 @@
                                     </div>
                                     <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                                         <div>
-                                            <h4 class="font-semibold text-white text-xs sm:text-sm mb-1 line-clamp-2">${p.name}</h4>
+                                            <h4 class="font-semibold text-white text-xs sm:text-sm mb-1 line-clamp-2 group-hover:text-primary transition">${p.name}</h4>
                                             <p class="text-[10px] text-slate-400 mb-2">${p.sales}+ sold on Amazon/Bol</p>
                                         </div>
                                         <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-1">
@@ -365,7 +387,7 @@
                                                 <span class="text-sm sm:text-lg font-black text-primary">${formatPrice(p.price)}</span>
                                                 <span class="text-[10px] text-slate-500 line-through block sm:inline sm:ml-1">${formatPrice(p.originalPrice)}</span>
                                             </div>
-                                            <button onclick="addToCart(${p.id})" class="bg-primary hover:bg-primaryDark text-white w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1">
+                                            <button onclick="event.stopPropagation(); addToCart(${p.id})" class="bg-primary hover:bg-primaryDark text-white w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1">
                                                 <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Add</span>
                                             </button>
                                         </div>
@@ -375,6 +397,73 @@
                         </div>
                     `}
                 </section>
+            `;
+        }
+
+        // --- PRODUCT DETAIL VIEW ---
+        function renderProductDetail(container) {
+            if (!selectedProduct) {
+                switchView('storefront');
+                return;
+            }
+            let p = selectedProduct;
+            container.innerHTML = `
+                <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+                    <button onclick="switchView('storefront')" class="mb-6 bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-700 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Products
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#131C2E] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+                        <!-- Product Image -->
+                        <div class="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-primary text-white text-xs font-black px-3 py-1 rounded-lg shadow">
+                                ${p.discount} OFF
+                            </div>
+                        </div>
+
+                        <!-- Product Info & Purchasing -->
+                        <div class="flex flex-col justify-between">
+                            <div>
+                                <span class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-block mb-3">
+                                    ${p.category}
+                                </span>
+                                <h2 class="text-xl sm:text-2xl font-black text-white mb-3">${p.name}</h2>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="text-amber-400 text-sm font-bold">★ ${p.rating} Rating</div>
+                                    <span class="text-slate-600">|</span>
+                                    <div class="text-slate-400 text-xs">${p.sales}+ successfully delivered via Amazon.nl & Bol.com</div>
+                                </div>
+
+                                <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 mb-6 flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xs text-slate-400 block mb-0.5">Flash Deal Price (EU VAT Incl.)</span>
+                                        <div class="text-2xl sm:text-3xl font-black text-primary">${formatPrice(p.price)}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs text-slate-500 line-through">${formatPrice(p.originalPrice)}</span>
+                                        <span class="text-[10px] text-emeraldSolar font-bold block">In Stock • Ready to Dispatch</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3 mb-6 text-xs text-slate-300">
+                                    <div class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-primary"></i> 1–3 business days express EU warehouse delivery</div>
+                                    <div class="flex items-center gap-2"><i class="fa-solid fa-shield-check text-emeraldSolar"></i> 25-Year Manufacturer Performance Warranty</div>
+                                    <div class="flex items-center gap-2"><i class="fa-solid fa-rotate-left text-accentYellow"></i> 30-day hassle-free return policy (Amazon & Bol compliant)</div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 pt-4 border-t border-slate-800">
+                                <button onclick="addToCart(${p.id})" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-3.5 rounded-xl font-bold text-sm border border-slate-700 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                </button>
+                                <button onclick="addToCart(${p.id}); openCheckoutModal()" class="flex-1 bg-gradient-to-r from-primary to-red-600 hover:from-primaryDark hover:to-red-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-bolt"></i> Buy Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `;
         }
 
@@ -497,21 +586,27 @@
         function changeCurrency(curr) {
             currentCurrency = curr;
             renderCartDrawer();
-            if(document.querySelector('.grid-cols-2')) {
-                renderStorefront(document.getElementById('app-main-container'));
+            if(document.querySelector('.grid-cols-2') || document.querySelector('.max-w-7xl')) {
+                if (selectedProduct) {
+                    renderProductDetail(document.getElementById('app-main-container'));
+                } else {
+                    renderStorefront(document.getElementById('app-main-container'));
+                }
             }
         }
 
         function filterByCategory(cat) {
             activeCategory = cat;
-            if(document.querySelector('.grid-cols-2')) {
+            selectedProduct = null;
+            if(document.getElementById('app-main-container')) {
                 renderStorefront(document.getElementById('app-main-container'));
             }
         }
 
         function handleSearch(query) {
             searchQuery = query;
-            if(document.querySelector('.grid-cols-2')) {
+            selectedProduct = null;
+            if(document.getElementById('app-main-container')) {
                 renderStorefront(document.getElementById('app-main-container'));
             }
         }
@@ -532,6 +627,7 @@
         function updateCartBadge() {
             let totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
             document.getElementById('cart-badge').innerText = totalQty;
+            document.getElementById('cart-badge-mobile').innerText = totalQty;
             document.getElementById('drawer-item-count').innerText = totalQty;
         }
 
