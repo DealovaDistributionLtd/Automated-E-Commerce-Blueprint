@@ -1,1243 +1,810 @@
 <!DOCTYPE html>
-<html lang="nl" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taomeng Island (淘梦岛) | Pro Scuba Store & Amazon/Bol.com Automation Hub</title>
+    <title>淘梦岛 | Taomeng Island - Global E-Commerce & Automation Hub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        darkbg: '#070b14',
-                        cardbg: '#0f172a',
-                        cardhover: '#1e293b',
-                        accentamber: '#f59e0b',
-                        accentblue: '#3b82f6',
-                        accentemerald: '#10b981',
-                        accentcyan: '#06b6d4',
-                        taobaored: '#ff5000',
-                        pinduoduored: '#e02e24'
+                        primary: '#FF5722', // Taobao/Shopee Orange
+                        primaryHover: '#F4511E',
+                        secondary: '#1A1A1A',
+                        accent: '#00B0FF',
+                        darkBg: '#0F172A',
+                        cardBg: '#1E293B',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js for analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 87, 34, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 87, 34, 0.8); }
         }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #070b14; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .glow-effect { animation: pulseGlow 3s infinite; }
     </style>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-primary selection:text-white">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-primary via-red-600 to-amber-600 text-white text-xs py-2 px-4 font-medium flex justify-between items-center z-50">
+        <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+            <span class="bg-black/30 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider animate-pulse">⚡ Flash Deal</span>
+            <span class="truncate">Amazon.nl & Bol.com Automated Sync Active • Free EU Shipping on Orders over €50 • 淘梦岛 (Dreamer Island) Official Store</span>
+        </div>
+        <div class="hidden md:flex items-center gap-4 text-slate-200">
+            <a href="#automation-login" onclick="switchView('hub-login')" class="hover:text-white transition flex items-center gap-1 font-semibold"><i class="fa-solid fa-lock text-amber-300"></i> Merchant Hub</a>
+            <span>|</span>
+            <select id="currency-selector" onchange="changeCurrency(this.value)" class="bg-black/30 text-white text-xs rounded px-2 py-0.5 border border-white/20 focus:outline-none">
+                <option value="EUR">EUR (€)</option>
+                <option value="USD">USD ($)</option>
+                <option value="MYR">MYR (RM)</option>
+            </select>
+        </div>
+    </div>
 
-    <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-40 border-b border-slate-800 bg-darkbg/95 backdrop-blur-md">
+    <!-- Main Header / Navigation -->
+    <header class="sticky top-0 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-40 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            
-            <!-- Brand Logo & Name -->
-            <div class="flex items-center space-x-3 shrink-0 cursor-pointer" onclick="switchGlobalMode('store')">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
-                    <i data-lucide="waves" class="w-6 h-6 text-white"></i>
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('storefront')">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-amber-500 flex items-center justify-center text-white font-black text-2xl shadow-lg glow-effect">
+                    淘
                 </div>
                 <div>
-                    <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-amber-400 to-cyan-400 bg-clip-text text-transparent">Taomeng Island</span>
-                    <span class="block text-[10px] text-slate-400 uppercase tracking-widest font-semibold">淘梦岛 &bull; Semporna & EU Tech</span>
+                    <h1 class="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
+                        淘梦岛 <span class="text-xs font-semibold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">Dreamer Island</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 font-medium">PADI Dive • Underwater Pro • Automated Trading</p>
                 </div>
             </div>
 
-            <!-- Mode Switcher & Currency selector -->
-            <div class="flex items-center space-x-3">
-                <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 shadow-inner">
-                    <button onclick="switchGlobalMode('store')" id="mode-btn-store" class="px-4 py-2 rounded-lg text-xs font-bold transition bg-amber-500 text-white shadow-md flex items-center space-x-2">
-                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                        <span>Storefront (Shopee/Taobao style)</span>
-                    </button>
-                    <button onclick="checkDashboardAccess()" id="mode-btn-dashboard" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center space-x-2">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i>
-                        <span>Merchant Hub (🔒 Secure Login)</span>
+            <!-- Search Bar -->
+            <div class="hidden md:flex flex-1 max-w-xl mx-4">
+                <div class="relative w-full">
+                    <input type="text" id="main-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ items across 淘梦岛 PADI Courses, Underwater Gear, MT5 EAs..." class="w-full bg-slate-800 text-slate-200 pl-11 pr-24 py-2.5 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-sm shadow-inner transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                    <button onclick="handleSearch(document.getElementById('main-search-input').value)" class="absolute right-1 top-1 bg-primary hover:bg-primaryHover text-white px-5 py-1.5 rounded-full text-xs font-bold transition shadow">
+                        Search
                     </button>
                 </div>
-
-                <select id="currency-selector" onchange="changeCurrency(this.value)" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-amber-400 focus:outline-none focus:border-amber-500">
-                    <option value="EUR">EUR (€)</option>
-                    <option value="MYR">MYR (RM)</option>
-                    <option value="CNY">CNY (¥)</option>
-                </select>
             </div>
 
-            <!-- Customer Header Actions -->
-            <div id="customer-header-actions" class="flex items-center space-x-3">
-                <button onclick="toggleWishlistDrawer()" class="relative p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition border border-slate-800">
-                    <i data-lucide="heart" class="w-5 h-5"></i>
-                    <span id="wishlist-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center hidden">0</span>
+            <!-- Header Action Icons -->
+            <div class="flex items-center gap-4">
+                <button onclick="switchView('storefront')" class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700">
+                    <i class="fa-solid fa-store text-primary"></i> Storefront
                 </button>
+                <button onclick="switchView('hub-login')" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700">
+                    <i class="fa-solid fa-gauge-high text-amber-400"></i> Automation Hub
+                </button>
+                <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primaryHover text-white text-xs font-bold transition shadow-lg">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="hidden sm:inline">Cart</span>
+                    <span id="cart-badge" class="bg-white text-primary rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
+                </button>
+            </div>
+        </div>
 
-                <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition border border-slate-800 flex items-center space-x-2">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    <span class="hidden sm:inline text-xs font-semibold" id="cart-total-header">€0,00</span>
-                    <span id="cart-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center hidden">0</span>
+        <!-- Mobile Search Bar -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <input type="text" id="mobile-search-input" oninput="handleSearch(this.value)" placeholder="Search 500+ items..." class="w-full bg-slate-800 text-slate-200 pl-10 pr-20 py-2 rounded-full border border-slate-700 focus:outline-none focus:border-primary text-xs">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+                <button onclick="handleSearch(document.getElementById('mobile-search-input').value)" class="absolute right-1 top-1 bg-primary text-white px-4 py-1 rounded-full text-[10px] font-bold">
+                    Search
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: PUBLIC E-COMMERCE STOREFRONT       -->
-    <!-- ========================================== -->
-    <div id="app-mode-store" class="flex-1 flex flex-col">
-        <!-- Announcement Bar -->
-        <div class="bg-gradient-to-r from-taobaored via-orange-600 to-pinduoduored text-white text-xs sm:text-sm font-medium py-2 px-4 text-center tracking-wide flex items-center justify-center space-x-2">
-            <i data-lucide="sparkles" class="w-4 h-4 shrink-0 animate-spin"></i>
-            <span>淘梦岛 11.11 Mega Sale &bull; Gratis verzending in NL/BE &amp; Semporna Dive Resorts Boeking &bull; Code: TAOMENG2026</span>
-        </div>
+    <!-- Main Dynamic View Container -->
+    <main id="app-main-container" class="flex-1 flex flex-col">
+        <!-- Injected via JavaScript (Storefront / Hub Login / Dashboard) -->
+    </main>
 
-        <!-- Hero Banner -->
-        <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-darkbg to-darkbg py-16 sm:py-20 border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-taobaored/10 border border-taobaored/20 text-taobaored text-xs font-semibold">
-                        <i data-lucide="compass" class="w-3.5 h-3.5"></i>
-                        <span>Semporna & Taomeng Island (仙本那淘梦岛) Official Store</span>
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                        Duikreizen, 4K Rigs & <span class="bg-gradient-to-r from-taobaored via-amber-400 to-cyan-400 bg-clip-text text-transparent">Luxe Geuren</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
-                        Boek exclusieve Sipadan duikpakketten of koop professionele onderwater videoregistratie, titanium gear en Gissah parfums met direct verzending naar Europa en Maleisië.
-                    </p>
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                        <a href="#shop-catalog" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-taobaored to-orange-600 hover:from-orange-600 hover:to-taobaored text-white font-bold text-sm shadow-xl shadow-taobaored/25 transition text-center">
-                            Winkel Nu (立即抢购)
-                        </a>
-                        <button onclick="toggleChat()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm transition flex items-center justify-center space-x-2">
-                            <i data-lucide="headset" class="w-4 h-4 text-cyan-400"></i>
-                            <span>Live Klantenservice / 淘宝客服</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
-                        <div class="w-10 h-10 rounded-xl bg-taobaored/10 text-taobaored flex items-center justify-center">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Geverifieerde Kwaliteit</h3>
-                        <p class="text-xs text-slate-400">Direct ingekocht bij gecertificeerde partners met 100% geld-terug-garantie.</p>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                            <i data-lucide="zap" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Wereldwijde Snelle Verzending</h3>
-                        <p class="text-xs text-slate-400">1–3 dagen in NL/BE en Maleisië &bull; API gekoppeld met BigBuy & Droppery.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Catalog Section -->
-        <main id="shop-catalog" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-            
-            <!-- Filters & Search Bar -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-6">
-                <div>
-                    <h2 class="text-2xl font-extrabold text-white">Taomeng Catalogus &amp; Reserveringen</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Filter op categorie of zoek op productnaam.</p>
-                </div>
-
-                <!-- Search Input -->
-                <div class="w-full md:w-72">
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                            <i data-lucide="search" class="w-4 h-4"></i>
-                        </span>
-                        <input type="text" id="store-search" oninput="handleStoreSearch(this.value)" placeholder="Zoek duikpakketten, camera's..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category Filter Buttons -->
-            <div class="flex flex-wrap items-center gap-2" id="store-category-filters">
-                <button onclick="filterStoreCategory('All')" class="store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-taobaored text-white shadow-md">Alle Items</button>
-                <button onclick="filterStoreCategory('Scuba Packages')" class="store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Semporna / Sipadan Reizen</button>
-                <button onclick="filterStoreCategory('Underwater Video')" class="store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Underwater Video Rigs</button>
-                <button onclick="filterStoreCategory('Scuba Gear')" class="store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Scuba Gear & Titanium</button>
-                <button onclick="filterStoreCategory('Gissah Fragrances')" class="store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Gissah Fragrances</button>
-            </div>
-
-            <!-- Product Grid -->
-            <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Dynamically rendered via JS -->
-            </div>
-        </main>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- VIEW 2: SECURE MERCHANT AUTOMATION HUB     -->
-    <!-- ========================================== -->
-    <div id="app-mode-dashboard" class="flex-1 flex flex-col hidden">
-        <!-- Dashboard Sub-Header -->
-        <div class="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center">
-                    <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
-                </div>
-                <div>
-                    <h2 class="text-base font-bold text-white">Taomeng Merchant Control Center (淘梦岛商家后台)</h2>
-                    <span class="text-[11px] text-emerald-400 font-mono">Status: Secure Session Active &bull; SP-API &amp; Bol Partner Connected</span>
-                </div>
-            </div>
-            <button onclick="switchGlobalMode('store')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition flex items-center space-x-2">
-                <i data-lucide="log-out" class="w-4 h-4"></i>
-                <span>Verlaat Hub / Log Uit</span>
-            </button>
-        </div>
-
-        <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-            
-            <!-- Platform Toggle & Header -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
-                <div>
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
-                        <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-                        <span>Autonomous Multi-Platform Operations</span>
-                    </div>
-                    <h1 class="text-2xl font-extrabold text-white">Amazon.nl &amp; Bol.com Automation Hub</h1>
-                    <p class="text-xs text-slate-400 mt-1">Real-time monitoring of automated fulfillment, repricing rules, and supplier routing.</p>
-                </div>
-
-                <!-- Platform Toggle (Amazon vs Bol) -->
-                <div class="flex bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <button onclick="switchDashboardPlatform('amazon')" id="plat-btn-amazon" class="px-4 py-2 rounded-lg text-xs font-bold transition bg-blue-600 text-white shadow">Amazon.nl Track</button>
-                    <button onclick="switchDashboardPlatform('bol')" id="plat-btn-bol" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">Bol.com Track</button>
-                </div>
-            </div>
-
-            <!-- KPI Metrics Banner -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Monthly Revenue</span>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-2xl font-extrabold text-white" id="kpi-rev">€54.820</span>
-                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">+21.4%</span>
-                    </div>
-                    <span class="block text-[10px] text-slate-500 mt-1">Synced across NL & BE</span>
-                </div>
-
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Net Margin Target</span>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-2xl font-extrabold text-white">16.8%</span>
-                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Goal: 12-18%</span>
-                    </div>
-                    <span class="block text-[10px] text-slate-500 mt-1">After fees & returns</span>
-                </div>
-
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Active Catalog Sync</span>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-2xl font-extrabold text-white">1.640</span>
-                        <span class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">15m feed</span>
-                    </div>
-                    <span class="block text-[10px] text-slate-500 mt-1">EAN Mapped via API</span>
-                </div>
-
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Amazon ODR</span>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-2xl font-extrabold text-emerald-400 font-mono">&lt; 0.3%</span>
-                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Norm &lt; 1%</span>
-                    </div>
-                    <span class="block text-[10px] text-slate-500 mt-1">Pre-fulfillment: 0.1%</span>
-                </div>
-
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Bol Service Score</span>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-2xl font-extrabold text-amber-400 font-mono">9.1 / 10</span>
-                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Norm &gt; 8.0</span>
-                    </div>
-                    <span class="block text-[10px] text-slate-500 mt-1">On-time delivery: 97.2%</span>
-                </div>
-            </div>
-
-            <!-- Live Automated Order Queue & Supplier Routing -->
-            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
-                            <span>Live Automated Order Queue & Supplier Routing</span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Orders placed on storefront/Amazon/Bol automatically routed to BigBuy / Droppery / Spocket with tracking injection.</p>
-                    </div>
-                    <button onclick="simulateNewOrder()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs transition flex items-center space-x-1.5 shadow">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                        <span>Simuleer Inkomende Bestelling</span>
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                                <th class="p-3">Order ID</th>
-                                <th class="p-3">Platform</th>
-                                <th class="p-3">Klant</th>
-                                <th class="p-3">Product</th>
-                                <th class="p-3">Supplier Routing</th>
-                                <th class="p-3">Status & Tracking</th>
-                                <th class="p-3 text-right">Netto Winst</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboard-order-queue" class="divide-y divide-slate-800 text-xs text-slate-300">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Repricing Calculator & Financial Breakdown Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Dynamic Repricer & Markup Rule Editor -->
-                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i data-lucide="calculator" class="w-5 h-5 text-cyan-400"></i>
-                            <span>Dynamic Markup & Repricer Formula</span>
-                        </h3>
-                        <p class="text-xs text-slate-400 mt-1">Formula: <code class="text-amber-400 font-mono">(Cost + Shipping) / (1 - Target Margin - Commission)</code></p>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Supplier Wholesale Cost (€)</label>
-                            <input type="number" id="exec-cost" value="45.00" step="1.00" oninput="calculateExecPricing()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">EU Shipping Cost (€)</label>
-                            <input type="number" id="exec-shipping" value="6.50" step="0.50" oninput="calculateExecPricing()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Target Net Margin (%)</label>
-                                <input type="number" id="exec-margin" value="22" step="1" oninput="calculateExecPricing()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Platform Commission (%)</label>
-                                <input type="number" id="exec-commission" value="12" step="1" oninput="calculateExecPricing()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-slate-400 block">Aanbevolen Verkoopprijs</span>
-                            <span id="exec-res-retail" class="text-2xl font-extrabold text-amber-400 font-mono">€79,62</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-slate-400 block">Geschatte Netto Winst</span>
-                            <span id="exec-res-profit" class="text-lg font-bold text-emerald-400 font-mono">€17,52</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Financial Breakdown Chart & Inventory Buffer Settings -->
-                <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i data-lucide="pie-chart" class="w-5 h-5 text-blue-400"></i>
-                            <span>Financial Margin & Cost Structure</span>
-                        </h3>
-                        <p class="text-xs text-slate-400 mt-1">Breakdown of gross vs net margins (30-45% gross, 12-18% net).</p>
-                    </div>
-
-                    <div class="relative h-48 flex items-center justify-center">
-                        <canvas id="financialChart"></canvas>
-                    </div>
-
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-semibold text-white block">Inventory Safety Buffer Threshold</span>
-                            <span class="text-[11px] text-slate-400">Auto set "Out of Stock" when supplier inventory &lt; 5 units</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <input type="number" value="5" class="w-16 bg-slate-900 border border-slate-800 rounded-lg py-1 text-center text-white text-xs">
-                            <span class="text-xs text-slate-400">units</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- OVERLAYS & MODALS                          -->
-    <!-- ========================================== -->
-
-    <!-- PASSWORD LOGIN MODAL (Taobao/Pinduoduo style) -->
-    <div id="login-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
-        <div class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity" onclick="closeLoginModal()"></div>
-        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 z-10 shadow-2xl space-y-6">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-
-            <div class="text-center space-y-2">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-taobaored to-pinduoduored text-white mx-auto flex items-center justify-center shadow-xl shadow-taobaored/30">
-                    <i data-lucide="lock" class="w-7 h-7"></i>
-                </div>
-                <h3 class="text-xl font-extrabold text-white">Merchant Hub Login (商家后台登录)</h3>
-                <p class="text-xs text-slate-400">Voer uw beveiligde pincode of wachtwoord in (standaard: <code class="text-amber-400 font-mono">8888</code>)</p>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Gebruikersnaam / Merchant ID</label>
-                    <input type="text" id="login-user" value="taomeng_admin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Beveiligingspincode / Wachtwoord</label>
-                    <input type="password" id="login-pass" placeholder="••••" value="8888" onkeypress="if(event.key==='Enter') verifyLogin()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 font-mono tracking-widest text-center text-lg">
-                </div>
-
-                <button onclick="verifyLogin()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-taobaored to-pinduoduored hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-taobaored/30 transition flex items-center justify-center space-x-2">
-                    <span>Inloggen in Hub (登录后台)</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-            <div class="text-center">
-                <span class="text-[11px] text-slate-500">Test pincode: <strong class="text-amber-400 font-mono">8888</strong></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- CART DRAWER -->
+    <!-- Cart Slide-Over Drawer -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
         <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
             <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col">
-                <div class="p-6 border-b border-slate-800 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="shopping-cart" class="w-5 h-5 text-amber-400"></i>
-                        <h3 class="font-bold text-white text-lg">Winkelmandje (购物车)</h3>
-                    </div>
-                    <button onclick="toggleCartDrawer()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-                        <i data-lucide="x" class="w-5 h-5"></i>
+                <!-- Cart Header -->
+                <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-primary"></i> Shopping Cart (<span id="drawer-item-count">0</span>)
+                    </h3>
+                    <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white p-2">
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
-                
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
-                    <!-- Populated via JS -->
+                <!-- Cart Items List -->
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-4 divide-y divide-slate-800/50">
+                    <!-- Dynamic Cart Items -->
                 </div>
-
-                <div class="p-6 border-t border-slate-800 space-y-4 bg-slate-950/50">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-400">Subtotaal</span>
-                        <span id="cart-subtotal" class="font-bold text-white">€0,00</span>
+                <!-- Cart Footer & Checkout -->
+                <div class="p-5 border-t border-slate-800 bg-slate-900/80">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-slate-400">Subtotal (EU Tax Included):</span>
+                        <span id="cart-subtotal-display" class="text-xl font-black text-primary">€0.00</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-400">Verzending / Express</span>
-                        <span id="cart-shipping-cost" class="font-semibold text-emerald-400">Gratis</span>
-                    </div>
-                    <div class="border-t border-slate-800 pt-3 flex items-center justify-between text-base font-bold">
-                        <span class="text-white">Totaal</span>
-                        <span id="cart-grandtotal" class="text-amber-400">€0,00</span>
-                    </div>
-
-                    <button onclick="openCheckoutModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-taobaored to-orange-600 hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-taobaored/25 transition flex items-center justify-center space-x-2">
-                        <span>Naar Afrekenen (结算)</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <button onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-primary to-amber-600 hover:from-primaryHover hover:to-amber-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock"></i> Proceed to Secure iDEAL / Bancontact Checkout
                     </button>
+                    <p class="text-[10px] text-center text-slate-500 mt-3">Automated sync with Amazon.nl & Bol.com fulfillment pipelines.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- WISHLIST DRAWER -->
-    <div id="wishlist-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleWishlistDrawer()"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col">
-                <div class="p-6 border-b border-slate-800 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="heart" class="w-5 h-5 text-amber-400"></i>
-                        <h3 class="font-bold text-white text-lg">Mijn Verlanglijst (收藏夹)</h3>
-                    </div>
-                    <button onclick="toggleWishlistDrawer()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                
-                <div id="wishlist-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PRODUCT DETAIL MODAL -->
-    <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
-        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeProductModal()"></div>
-        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 z-10 shadow-2xl space-y-6">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <!-- Populated via JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- CHECKOUT MODAL -->
-    <div id="checkout-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
-        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeCheckoutModal()"></div>
-        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 z-10 shadow-2xl space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-amber-400"></i>
-                    <h3 class="font-bold text-white text-lg">Veilig Afrekenen / 淘宝/Shopee 支付</h3>
-                </div>
-                <button onclick="closeCheckoutModal()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <div id="checkout-form-step" class="space-y-4">
+            <h3 class="text-xl font-extrabold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Secure EU Checkout
+            </h3>
+            <p class="text-xs text-slate-400 mb-6">Enter your delivery details for dispatch via BigBuy / Droppery EU warehouse.</p>
+            
+            <form onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Voornaam</label>
-                        <input type="text" id="chk-fn" value="Bram" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">First Name</label>
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Desmond">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Achternaam</label>
-                        <input type="text" id="chk-ln" value="van Dijk" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Last Name</label>
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Maker">
                     </div>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">E-mailadres</label>
-                    <input type="email" id="chk-email" value="bram.vandijk@example.nl" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="desmond@taomeng.com">
                 </div>
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Straatnaam & Huisnummer</label>
-                        <input type="text" id="chk-street" value="Coolsingel 42" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Postcode</label>
-                        <input type="text" id="chk-zip" value="3011 AD" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Delivery Address (NL / BE / EU)</label>
+                    <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="Keizersgracht 123, Amsterdam">
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Stad / Plaats</label>
-                        <input type="text" id="chk-city" value="Rotterdam" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Postal Code</label>
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary" placeholder="1015 CJ">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Land</label>
-                        <select id="chk-country" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                            <option value="NL">Nederland / België</option>
-                            <option value="MY">Malaysia (Semporna)</option>
-                            <option value="CN">China (Mainland)</option>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Payment Method</label>
+                        <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+                            <option>iDEAL (Netherlands)</option>
+                            <option>Bancontact (Belgium)</option>
+                            <option>Credit Card (Visa/Mastercard)</option>
+                            <option>PayPal EU</option>
                         </select>
                     </div>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-2">Betaalmethode / 支付方式</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <label class="border border-taobaored bg-taobaored/10 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-white flex flex-col items-center justify-center space-y-1">
-                            <input type="radio" name="payment" checked class="hidden">
-                            <i data-lucide="zap" class="w-4 h-4 text-taobaored"></i>
-                            <span>iDEAL / Bancontact</span>
-                        </label>
-                        <label class="border border-slate-800 bg-slate-950 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-slate-300 flex flex-col items-center justify-center space-y-1">
-                            <input type="radio" name="payment" class="hidden">
-                            <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400"></i>
-                            <span>WeChat / Alipay</span>
-                        </label>
-                        <label class="border border-slate-800 bg-slate-950 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-slate-300 flex flex-col items-center justify-center space-y-1">
-                            <input type="radio" name="payment" class="hidden">
-                            <i data-lucide="credit-card" class="w-4 h-4"></i>
-                            <span>Creditcard</span>
-                        </label>
+                <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-400">Total Due:</span>
+                        <div id="checkout-modal-total" class="text-lg font-black text-primary">€0.00</div>
                     </div>
+                    <button type="submit" class="bg-primary hover:bg-primaryHover text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg transition">
+                        Complete Order & Sync API
+                    </button>
                 </div>
-
-                <button onclick="processCheckoutOrder()" class="w-full py-4 rounded-xl bg-gradient-to-r from-taobaored to-pinduoduored hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-taobaored/25 transition flex items-center justify-center space-x-2">
-                    <span>Bestelling Bevestigen & Betalen (确认 & 支付)</span>
-                    <i data-lucide="check" class="w-4 h-4"></i>
-                </button>
-            </div>
-
-            <div id="checkout-success-step" class="hidden text-center space-y-4 py-8">
-                <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center">
-                    <i data-lucide="check-circle-2" class="w-10 h-10"></i>
-                </div>
-                <h4 class="text-xl font-bold text-white">Bestelling Succesvol Geplaatst! (支付成功)</h4>
-                <p class="text-xs text-slate-300 max-w-sm mx-auto">
-                    Uw bestelling is direct doorgestuurd naar ons geautomatiseerde EU/Semporna ordertegoed. Ordernummer <strong class="text-amber-400">#TM-92841</strong>.
-                </p>
-                <button onclick="closeCheckoutModal(); resetCart();" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition">
-                    Terug naar de Winkel
-                </button>
-            </div>
+            </form>
         </div>
     </div>
 
-    <!-- LIVE CHAT WIDGET -->
-    <div class="fixed bottom-6 right-6 z-40">
-        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div class="bg-gradient-to-r from-taobaored to-orange-600 p-4 text-white flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
-                    <span class="font-bold text-sm">Taomeng 24/7 淘宝客服 &amp; Duikexpert</span>
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-10 px-4 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">淘</div>
+                    <span class="font-bold text-white text-base">淘梦岛 (Dreamer Island)</span>
                 </div>
-                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <p class="text-slate-400 mb-4 leading-relaxed">Official e-commerce storefront and automated multi-channel hub operating on Amazon.nl and Bol.com with automated EU supplier fulfillment.</p>
+                <p class="text-slate-500">PADI Dive Instructor • Underwater Videography • MQL5 Expert Advisors</p>
             </div>
-            
-            <div id="chat-messages" class="p-4 h-64 overflow-y-auto space-y-3 text-xs text-slate-300">
-                <div class="bg-slate-800 p-3 rounded-xl rounded-tl-none max-w-[85%]">
-                    你好！欢迎来到淘梦岛 (Taomeng Island). Vragen over Sipadan duikreizen, 4K camera rigs of Gissah geuren? Ik help u direct!
-                </div>
+            <div>
+                <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Store Categories</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="filterByCategory('All'); return false;" class="hover:text-white transition">All 500+ Items</a></li>
+                    <li><a href="#" onclick="filterByCategory('PADI Diving'); return false;" class="hover:text-white transition">PADI Diving & Courses</a></li>
+                    <li><a href="#" onclick="filterByCategory('Dreamer Island Packages'); return false;" class="hover:text-white transition">Dreamer Island Packages</a></li>
+                    <li><a href="#" onclick="filterByCategory('Underwater Gear'); return false;" class="hover:text-white transition">Underwater Videography Gear</a></li>
+                    <li><a href="#" onclick="filterByCategory('Trading EAs'); return false;" class="hover:text-white transition">MetaTrader 5 Expert Advisors</a></li>
+                </ul>
             </div>
-
-            <div class="p-3 border-t border-slate-800 flex items-center space-x-2 bg-slate-950">
-                <input type="text" id="chat-input" placeholder="Typ je bericht..." onkeypress="if(event.key==='Enter') sendChatMessage()" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-                <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-taobaored text-white hover:opacity-90 transition"><i data-lucide="send" class="w-4 h-4"></i></button>
+            <div>
+                <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Automation & Compliance</h4>
+                <ul class="space-y-2">
+                    <li><a href="#hub-login" onclick="switchView('hub-login'); return false;" class="hover:text-white transition">Merchant Hub Login</a></li>
+                    <li><a href="#" class="hover:text-white transition">Amazon.nl SP-API Integration</a></li>
+                    <li><a href="#" class="hover:text-white transition">Bol.com ChannelEngine Sync</a></li>
+                    <li><a href="#" class="hover:text-white transition">BigBuy / Droppery Supplier API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-3 uppercase tracking-wider text-[11px]">Support & Contact</h4>
+                <p class="mb-2">Assistants: Ken & @序序宝宝</p>
+                <p class="mb-2">Email: support@taomeng.com</p>
+                <p class="text-slate-500">Sabah, Malaysia / Amsterdam, NL Operations</p>
             </div>
         </div>
-
-        <button onclick="toggleChat()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-taobaored to-pinduoduored text-white shadow-2xl flex items-center justify-center hover:scale-105 transition">
-            <i data-lucide="message-square" class="w-6 h-6"></i>
-        </button>
-    </div>
+        <div class="max-w-7xl mx-auto border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 淘梦岛 (Dreamer Island) & Taomeng Distribution Ltd. All rights reserved.</p>
+            <div class="flex gap-4">
+                <span class="px-2.5 py-1 rounded bg-slate-800 text-emerald-400 font-bold text-[10px]">Amazon.nl Pro Active</span>
+                <span class="px-2.5 py-1 rounded bg-slate-800 text-accent font-bold text-[10px]">Bol.com Partner Verified</span>
+            </div>
+        </div>
+    </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Multi-Currency Rates
-        let currentCurrency = 'EUR';
-        const rates = {
-            EUR: { symbol: '€', rate: 1.0 },
-            MYR: { symbol: 'RM', rate: 5.12 },
-            CNY: { symbol: '¥', rate: 7.85 }
-        };
-
-        function formatPrice(eurAmount) {
-            const r = rates[currentCurrency];
-            const converted = eurAmount * r.rate;
-            if (currentCurrency === 'EUR') {
-                return '€' + converted.toFixed(2).replace('.', ',');
-            } else if (currentCurrency === 'MYR') {
-                return 'RM ' + converted.toFixed(2);
-            } else {
-                return '¥' + converted.toFixed(2);
-            }
-        }
-
-        function changeCurrency(curr) {
-            currentCurrency = curr;
-            renderStoreProducts(currentStoreCategory);
-            updateCartUI();
-            updateWishlistUI();
-            showNotification(`Valuta gewijzigd naar ${curr}`, 'info');
-        }
-
-        // Catalog Dataset: Scuba Packages, Underwater Video, Titanium Gear & Gissah
-        const catalogProducts = [
-            {
-                id: 1,
-                name: "Sipadan & Mabul Island VIP 5D4N Dive Package",
-                category: "Scuba Packages",
-                price: 1250.00,
-                originalPrice: 1550.00,
-                rating: 5.0,
-                reviews: 240,
-                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
-                desc: "Exclusieve 5-daagse duikreis in Semporna inclusief Sipadan permit, resort verblijf, onbeperkt huisrif duiken en boottransfers.",
-                specs: ["Inclusief Sipadan Permit", "5 dagen / 4 nachten resort", "Volpension maaltijden", "Gegarandeerd vertrek"]
-            },
-            {
-                id: 2,
-                name: "Pro 4K Underwater Video Rig & Dual Light Set",
-                category: "Underwater Video",
-                price: 389.00,
-                originalPrice: 489.00,
-                rating: 4.9,
-                reviews: 128,
-                image: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?auto=format&fit=crop&w=600&q=80",
-                desc: "Aluminium traysysteem met dubbele 3000 lumen duiklampen en 4K action camera behuizing voor professionele onderwateropnames.",
-                specs: ["Dieptelimiet: 100 meter", "Lichtsterkte: 2x 3000 Lumen", "Accuduur: 120 min", "EU & MY Voorraad: Direct leverbaar"]
-            },
-            {
-                id: 3,
-                name: "Titanium Backplate & Wing Scuba Harness",
-                category: "Scuba Gear",
-                price: 499.00,
-                originalPrice: 599.00,
-                rating: 5.0,
-                reviews: 76,
-                image: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=600&q=80",
-                desc: "Lichtgewicht titanium backplate met 30lbs donut wing, perfect voor technische duiken in Semporna of de Noordzee.",
-                specs: ["Materiaal: Graad 5 Titanium", "Liftvermogen: 30 lbs / 14 kg", "Inclusief harnasbanden", "EU & Asia Voorraad"]
-            },
-            {
-                id: 4,
-                name: "Gissah Imperial Valley Extrait de Parfum (200ml)",
-                category: "Gissah Fragrances",
-                price: 135.00,
-                originalPrice: 165.00,
-                rating: 4.9,
-                reviews: 210,
-                image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80",
-                desc: "Exclusieve niche geur met noten van bergamot, davana, amber en muskus. Grote favoriet in Europa en Azië.",
-                specs: ["Inhoud: 200 ml Extrait de Parfum", "Geurfamilie: Houtachtig / Oriëntaals", "100% originele import", "Direct verzonden"]
-            },
-            {
-                id: 5,
-                name: "Wide-Angle Wet Lens (M67 Mount)",
-                category: "Underwater Video",
-                price: 249.50,
-                originalPrice: 299.00,
-                rating: 4.8,
-                reviews: 94,
-                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80",
-                desc: "Optische groothoek natte lens met 0.42x vergroting en 140° gezichtsveld voor ultieme groothoekopnames.",
-                specs: ["Beeldhoek: 140 graden", "Montage: M67 schroefdraad", "Optisch glas multi-coating", "Op voorraad"]
-            },
-            {
-                id: 6,
-                name: "Gissah Solitaire Luxury Gift Set",
-                category: "Gissah Fragrances",
-                price: 189.00,
-                originalPrice: 220.00,
-                rating: 4.9,
-                reviews: 115,
-                image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80",
-                desc: "Luxe geschenkset van Gissah met twee iconische parfums in een prachtige fluwelen opbergbox.",
-                specs: ["Inhoud: 2x 100ml flacons", "Exclusieve editie", "Duur: 12+ uur op huid", "Op voorraad"]
-            }
+        // --- 500+ PRODUCTS GENERATOR ---
+        const categories = ['PADI Diving', 'Dreamer Island Packages', 'Underwater Gear', 'Trading EAs', 'Home Decor', 'Audio & Tech'];
+        const baseProducts = [
+            { name: "PADI Open Water Diver Course + Dreamer Island Stay", cat: "PADI Diving", price: 389.00, img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&auto=format&fit=crop&q=60", sales: 1420 },
+            { name: "PADI Advanced Open Water + Deep Dive Special", cat: "PADI Diving", price: 449.00, img: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=500&auto=format&fit=crop&q=60", sales: 980 },
+            { name: "Discover Scuba Diving (DSD) Semporna / 淘梦岛", cat: "Dreamer Island Packages", price: 129.00, img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60", sales: 3410 },
+            { name: "3D2N Dreamer Island VIP Diving & Fish Storm Package", cat: "Dreamer Island Packages", price: 699.00, img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60", sales: 2150 },
+            { name: "DJI Osmo Action 6 Underwater Housing & AOI 0.73x Lens", cat: "Underwater Gear", price: 549.00, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop&q=60", sales: 780 },
+            { name: "Dual-Light Video Rig with 5000lm LED Strobe Arms", cat: "Underwater Gear", price: 289.00, img: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60", sales: 620 },
+            { name: "MT5 Expert Advisor: 'Apex Sentinel' Trend Scalper", cat: "Trading EAs", price: 299.00, img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=500&auto=format&fit=crop&q=60", sales: 1890 },
+            { name: "MT5 Expert Advisor: 'Dark Venus' Gold Hedging Bot", cat: "Trading EAs", price: 399.00, img: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=500&auto=format&fit=crop&q=60", sales: 2450 },
+            { name: "Ceiling-Height Fluted PVC Wall Panel (Box of 10)", cat: "Home Decor", price: 119.00, img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=500&auto=format&fit=crop&q=60", sales: 1120 },
+            { name: "Custom Automotive DSP 4-Channel Amplifier & Subwoofer", cat: "Audio & Tech", price: 349.00, img: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&auto=format&fit=crop&q=60", sales: 530 }
         ];
+
+        // Generate 500 products programmatically
+        let products = [];
+        for (let i = 1; i <= 500; i++) {
+            let base = baseProducts[(i - 1) % baseProducts.length];
+            let variation = i > 10 ? ` [Batch #${i}]` : "";
+            let priceOffset = ((i * 13) % 150) - 50;
+            let finalPrice = Math.max(19.00, base.price + priceOffset);
+            products.push({
+                id: i,
+                name: base.name + variation,
+                category: base.cat,
+                price: parseFloat(finalPrice.toFixed(2)),
+                image: base.img,
+                sales: base.sales + (i * 7) % 500,
+                rating: (4.7 + ((i % 3) * 0.1)).toFixed(1)
+            });
+        }
 
         let cart = [];
-        let wishlist = [];
-        let currentStoreCategory = 'All';
+        let currentCurrency = 'EUR';
+        let currencyRates = { EUR: 1, USD: 1.08, MYR: 4.82 };
+        let currencySymbols = { EUR: '€', USD: '$', MYR: 'RM' };
+        let activeCategory = 'All';
+        let searchQuery = '';
 
-        let automatedOrders = [
-            { id: "TM-84912", platform: "Bol.com", customer: "Lotte de Jong", product: "Gissah Imperial Valley Extrait", supplier: "BigBuy EU", status: "Tracking Injected (PostNL)", profit: "€28.50" },
-            { id: "TM-84913", platform: "Amazon.nl", customer: "Mark Verhagen", product: "Pro 4K Underwater Video Rig", supplier: "Droppery NL", status: "API Dispatched", profit: "€64.20" },
-            { id: "TM-84914", platform: "Bol.com", customer: "Sophie Peeters", product: "Wide-Angle Wet Lens (M67)", supplier: "BigBuy EU", status: "Delivered (Bpost)", profit: "€42.10" }
-        ];
-
-        // Global Mode Switching (Store vs Dashboard with password check)
-        function switchGlobalMode(mode) {
-            if (mode === 'store') {
-                document.getElementById('app-mode-store').classList.remove('hidden');
-                document.getElementById('app-mode-dashboard').classList.add('hidden');
-                document.getElementById('mode-btn-store').className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-taobaored text-white shadow-md flex items-center space-x-2";
-                document.getElementById('mode-btn-dashboard').className = "px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center space-x-2";
-                renderStoreProducts(currentStoreCategory);
-            } else {
-                // Trigger password modal for secure merchant hub
-                document.getElementById('login-modal').classList.remove('hidden');
-            }
+        // --- NAVIGATION & VIEW ROUTER ---
+        function switchView(viewName) {
+            const mainContainer = document.getElementById('app-main-container');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
-        function checkDashboardAccess() {
-            document.getElementById('login-modal').classList.remove('hidden');
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-        }
-
-        function verifyLogin() {
-            const pass = document.getElementById('login-pass').value;
-            if (pass === '8888' || pass === 'admin') {
-                closeLoginModal();
-                document.getElementById('app-mode-store').classList.add('hidden');
-                document.getElementById('app-mode-dashboard').classList.remove('hidden');
-                document.getElementById('mode-btn-store').className = "px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center space-x-2";
-                document.getElementById('mode-btn-dashboard').className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-blue-600 text-white shadow-md flex items-center space-x-2";
-                renderDashboardOrders();
-                initFinancialChart();
-                calculateExecPricing();
-                showNotification('Succesvol ingelogd in Taomeng Merchant Automation Hub!', 'success');
-            } else {
-                showNotification('Onjuiste pincode! Probeer 8888.', 'info');
+            if (viewName === 'storefront') {
+                renderStorefront(mainContainer);
+            } else if (viewName === 'hub-login') {
+                renderHubLogin(mainContainer);
+            } else if (viewName === 'hub-dashboard') {
+                renderHubDashboard(mainContainer);
             }
         }
 
-        // ==================== STOREFRONT LOGIC ====================
-        function renderStoreProducts(category = 'All') {
-            const grid = document.getElementById('store-product-grid');
-            const filtered = category === 'All' ? catalogProducts : catalogProducts.filter(p => p.category === category);
+        // --- STOREFRONT RENDERER ---
+        function renderStorefront(container) {
+            let filtered = products.filter(p => {
+                let matchesCat = activeCategory === 'All' || p.category === activeCategory;
+                let matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
 
-            grid.innerHTML = filtered.map(p => `
-                <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 flex flex-col group hover:border-taobaored/50 transition duration-300">
-                    <div class="relative overflow-hidden aspect-square bg-slate-950 cursor-pointer" onclick="openProductModal(${p.id})">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x600/0f172a/ff5000?text=Taomeng+Island'">
-                        <div class="absolute top-3 left-3 bg-taobaored text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">
-                            -${Math.round((1 - p.price / p.originalPrice) * 100)}% 爆款
+            container.innerHTML = `
+                <!-- Hero Section -->
+                <section class="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 py-16 px-4 border-b border-slate-800 overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#FF5722_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                        <div>
+                            <span class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 mb-4">
+                                <i class="fa-solid fa-water"></i> 淘梦岛 (Dreamer Island) Official
+                            </span>
+                            <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                                Professional Diving, Underwater Gear & <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">Automated Trading EAs</span>
+                            </h2>
+                            <p class="text-slate-400 text-base mb-8 leading-relaxed">
+                                Experience world-class PADI dive courses in Semporna & Dreamer Island, professional DJI underwater camera setups, and algorithmic MetaTrader 5 trading solutions synced directly via EU fulfillment.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="filterByCategory('PADI Diving')" class="bg-primary hover:bg-primaryHover text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center gap-2">
+                                    <i class="fa-solid fa-person-swimming"></i> Explore Dive Packages
+                                </button>
+                                <button onclick="filterByCategory('Trading EAs')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-robot text-accent"></i> MT5 Expert Advisors
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2 rounded-full bg-slate-900/80 backdrop-blur-md text-slate-300 hover:text-taobaored transition">
-                            <i data-lucide="heart" class="w-4 h-4 ${wishlist.includes(p.id) ? 'fill-taobaored text-taobaored' : ''}"></i>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
+                                <i class="fa-solid fa-truck-fast text-3xl text-primary mb-3"></i>
+                                <h3 class="font-bold text-white text-base mb-1">1-3 Day EU Delivery</h3>
+                                <p class="text-xs text-slate-400">Automated BigBuy & Droppery pipeline synced to Amazon.nl & Bol.com.</p>
+                            </div>
+                            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
+                                <i class="fa-solid fa-shield-check text-3xl text-emerald-400 mb-3"></i>
+                                <h3 class="font-bold text-white text-base mb-1">100% Policy Compliant</h3>
+                                <p class="text-xs text-slate-400">Blind shipping, local EU return addresses, & automated VAT compliance.</p>
+                            </div>
+                            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
+                                <i class="fa-solid fa-star text-3xl text-amber-400 mb-3"></i>
+                                <h3 class="font-bold text-white text-base mb-1">Top Rated Service</h3>
+                                <p class="text-xs text-slate-400">Managed by Desmond Maker with assistants Ken & @序序宝宝.</p>
+                            </div>
+                            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl backdrop-blur">
+                                <i class="fa-solid fa-bolt text-3xl text-accent mb-3"></i>
+                                <h3 class="font-bold text-white text-base mb-1">Live Price Sync</h3>
+                                <p class="text-xs text-slate-400">Dynamic 15-minute repricing algorithms maintaining healthy 35% margins.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Category Pills Navigation -->
+                <div class="bg-slate-900 border-b border-slate-800 sticky top-20 z-30 shadow">
+                    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto hide-scrollbar">
+                        <button onclick="filterByCategory('All')" class="px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${activeCategory === 'All' ? 'bg-primary text-white shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            🔥 All Products (500)
                         </button>
+                        ${categories.map(cat => `
+                            <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-bold transition whitespace-nowrap ${activeCategory === cat ? 'bg-primary text-white shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                                ${cat}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Products Grid Section -->
+                <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+                            <span>Catalog</span> <span class="text-xs font-normal text-slate-400">(${filtered.length} items available)</span>
+                        </h3>
+                        <div class="text-xs text-slate-400">
+                            Sorted by: <span class="text-white font-semibold">Best Selling & Live Sync</span>
+                        </div>
                     </div>
 
-                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-semibold text-cyan-400 uppercase tracking-widest">${p.category}</span>
-                                <div class="flex items-center space-x-1 text-xs text-amber-400">
-                                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
-                                    <span class="font-bold">${p.rating}</span>
-                                    <span class="text-slate-500">(${p.reviews})</span>
+                    ${filtered.length === 0 ? `
+                        <div class="text-center py-20 bg-slate-900/50 rounded-2xl border border-slate-800">
+                            <i class="fa-solid fa-box-open text-5xl text-slate-600 mb-4"></i>
+                            <h4 class="text-lg font-bold text-white mb-2">No products found</h4>
+                            <p class="text-sm text-slate-400">Try searching for another keyword or category.</p>
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            ${filtered.map(p => `
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-primary/50 transition duration-300 flex flex-col group">
+                                    <div class="relative h-48 overflow-hidden bg-slate-800">
+                                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/10">
+                                            ${p.category}
+                                        </div>
+                                        <div class="absolute bottom-3 right-3 bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded shadow">
+                                            ★ ${p.rating}
+                                        </div>
+                                    </div>
+                                    <div class="p-5 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm mb-2 line-clamp-2 group-hover:text-primary transition">${p.name}</h4>
+                                            <p class="text-xs text-slate-400 mb-3"><i class="fa-solid fa-fire text-amber-500 mr-1"></i> ${p.sales}+ sold on Amazon.nl / Bol.com</p>
+                                        </div>
+                                        <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                                            <div>
+                                                <span class="text-[10px] text-slate-500 block">EU Price</span>
+                                                <span class="text-lg font-black text-primary">${formatPrice(p.price)}</span>
+                                            </div>
+                                            <button onclick="addToCart(${p.id})" class="bg-slate-800 hover:bg-primary text-slate-200 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 border border-slate-700 hover:border-primary">
+                                                <i class="fa-solid fa-cart-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </section>
+            `;
+        }
+
+        // --- AUTHENTICATION & LOGIN VIEW ---
+        function renderHubLogin(container) {
+            container.innerHTML = `
+                <div class="flex-1 flex items-center justify-center px-4 py-16 bg-slate-950">
+                    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary to-amber-500 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-black mb-4 shadow-xl glow-effect">
+                                <i class="fa-solid fa-shield-halved"></i>
                             </div>
-                            <h3 onclick="openProductModal(${p.id})" class="font-bold text-white text-base hover:text-taobaored cursor-pointer transition">${p.name}</h3>
-                            <p class="text-xs text-slate-400 line-clamp-2">${p.desc}</p>
+                            <h3 class="text-2xl font-black text-white tracking-tight">Merchant Automation Hub</h3>
+                            <p class="text-xs text-slate-400 mt-1">Password Protected • Amazon.nl & Bol.com Backend</p>
                         </div>
 
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                        <form onsubmit="handleHubLogin(event)" class="space-y-4">
                             <div>
-                                <span class="text-xs text-slate-500 line-through block">${formatPrice(p.originalPrice)}</span>
-                                <span class="text-lg font-extrabold text-white">${formatPrice(p.price)}</span>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Merchant Username</label>
+                                <input type="text" id="hub-user" required value="Desmond Maker" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
                             </div>
-                            <button onclick="addToCart(${p.id})" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-taobaored to-orange-600 hover:opacity-90 text-white font-semibold text-xs shadow-lg shadow-taobaored/20 transition flex items-center space-x-1.5">
-                                <i data-lucide="plus" class="w-4 h-4"></i>
-                                <span>Koop Nu</span>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Access Password</label>
+                                <input type="password" id="hub-pass" required placeholder="Enter password (e.g. admin123)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary">
+                            </div>
+                            <div class="pt-2">
+                                <button type="submit" class="w-full bg-gradient-to-r from-primary to-amber-600 hover:from-primaryHover hover:to-amber-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-right-to-bracket"></i> Login to Automation Hub
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-6 text-center">
+                            <p class="text-[11px] text-slate-500">Hint: Any password works for demo access (e.g., <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">taomeng2026</code>)</p>
+                            <button onclick="switchView('storefront')" class="mt-4 text-xs text-primary hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
+                                <i class="fa-solid fa-arrow-left"></i> Back to Public Storefront
                             </button>
                         </div>
                     </div>
                 </div>
-            `).join('');
-
-            lucide.createIcons();
+            `;
         }
 
-        renderStoreProducts();
-
-        function filterStoreCategory(cat) {
-            currentStoreCategory = cat;
-            document.querySelectorAll('.store-cat-btn').forEach(btn => {
-                if (btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('Alle'))) {
-                    btn.className = "store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-taobaored text-white shadow-md";
-                } else {
-                    btn.className = "store-cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800";
-                }
-            });
-            renderStoreProducts(cat);
+        function handleHubLogin(e) {
+            e.preventDefault();
+            switchView('hub-dashboard');
         }
 
-        function handleStoreSearch(query) {
-            const q = query.toLowerCase();
-            const grid = document.getElementById('store-product-grid');
-            const filtered = catalogProducts.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+        // --- AUTOMATION HUB DASHBOARD RENDERER ---
+        function renderHubDashboard(container) {
+            container.innerHTML = `
+                <div class="flex-1 bg-slate-950 py-10 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Hub Header -->
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-primary rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                                    <i class="fa-solid fa-gauge-high"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-black text-white flex items-center gap-2">
+                                        Taomeng Automation Hub <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">100% Active</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-400">Managing Amazon.nl, Bol.com, BigBuy, Droppery & MT5 EAs • Assistants: Ken & @序序宝宝</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="switchView('storefront')" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-store"></i> View Storefront
+                                </button>
+                                <button onclick="switchView('hub-login')" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-red-500/30 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </div>
+                        </div>
 
-            grid.innerHTML = filtered.map(p => `
-                <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 flex flex-col group hover:border-taobaored/50 transition duration-300">
-                    <div class="relative overflow-hidden aspect-square bg-slate-950 cursor-pointer" onclick="openProductModal(${p.id})">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <div class="absolute top-3 left-3 bg-taobaored text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">
-                            -${Math.round((1 - p.price / p.originalPrice) * 100)}%
+                        <!-- Stats Overview Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xs font-semibold text-slate-400">Total Catalog Items</span>
+                                    <i class="fa-solid fa-boxes-stacked text-primary text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-black text-white mb-1">500</div>
+                                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> Fully Synced (15m freq)
+                                </div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xs font-semibold text-slate-400">Active Channels</span>
+                                    <i class="fa-solid fa-globe text-accent text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-black text-white mb-1">Amazon & Bol</div>
+                                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> ODR < 1% | Norm 98%+
+                                </div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xs font-semibold text-slate-400">Monthly Revenue (Est.)</span>
+                                    <i class="fa-solid fa-euro-sign text-amber-400 text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-black text-white mb-1">€24,850</div>
+                                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> Net Margin 16.5%
+                                </div>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xs font-semibold text-slate-400">Automated Suppliers</span>
+                                    <i class="fa-solid fa-warehouse text-purple-400 text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-black text-white mb-1">BigBuy / Droppery</div>
+                                <div class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-bolt"></i> Blind Shipping Active
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                        <div class="space-y-2">
-                            <span class="text-[10px] font-semibold text-cyan-400 uppercase tracking-widest">${p.category}</span>
-                            <h3 onclick="openProductModal(${p.id})" class="font-bold text-white text-base hover:text-taobaored cursor-pointer transition">${p.name}</h3>
-                            <p class="text-xs text-slate-400 line-clamp-2">${p.desc}</p>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
-                            <span class="text-lg font-extrabold text-white">${formatPrice(p.price)}</span>
-                            <button onclick="addToCart(${p.id})" class="px-4 py-2.5 rounded-xl bg-taobaored text-white font-semibold text-xs transition">Koop Nu</button>
+
+                        <!-- Hub Detailed Tabs / Sections -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Left 2 Cols: Platform Sync Logs & Repricing Rules -->
+                            <div class="lg:col-span-2 space-y-8">
+                                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h4 class="font-extrabold text-white text-lg flex items-center gap-2">
+                                            <i class="fa-solid fa-rotate text-primary"></i> Multi-Channel Order & Sync Monitor
+                                        </h4>
+                                        <span class="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full font-bold">Auto-Polling 15m</span>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">NL</div>
+                                                <div>
+                                                    <h5 class="font-bold text-white text-sm">Amazon.nl Professional Store</h5>
+                                                    <p class="text-xs text-slate-400">Order #302-9841290-092 • PADI Open Water Course</p>
+                                                </div>
+                                            </div>
+                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Fulfilled via BigBuy</span>
+                                        </div>
+                                        <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center font-bold">BOL</div>
+                                                <div>
+                                                    <h5 class="font-bold text-white text-sm">Bol.com Partner Platform</h5>
+                                                    <p class="text-xs text-slate-400">Order #B2026-88319 • DJI Osmo Action 6 Kit</p>
+                                                </div>
+                                            </div>
+                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Tracking Synced</span>
+                                        </div>
+                                        <div class="bg-slate-800/60 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">MT5</div>
+                                                <div>
+                                                    <h5 class="font-bold text-white text-sm">MQL5 Trading EA License Delivery</h5>
+                                                    <p class="text-xs text-slate-400">Apex Sentinel Automated Cent Account Activation</p>
+                                                </div>
+                                            </div>
+                                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">Instant API Delivery</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Repricing & Markup Configuration -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                                    <h4 class="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-sliders text-accent"></i> Pricing Formula & Margin Rules
+                                    </h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                                        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                            <span class="text-xs text-slate-400 block mb-1">Target Gross Margin</span>
+                                            <span class="text-xl font-black text-white">35% - 45%</span>
+                                        </div>
+                                        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                            <span class="text-xs text-slate-400 block mb-1">Platform Commission</span>
+                                            <span class="text-xl font-black text-white">7% - 15%</span>
+                                        </div>
+                                        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                            <span class="text-xs text-slate-400 block mb-1">Stock Buffer Threshold</span>
+                                            <span class="text-xl font-black text-amber-400">&lt; 5 Units (Out)</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Formula: <code class="bg-slate-800 text-slate-200 px-2 py-1 rounded border border-slate-700 font-mono">Markup = (Supplier Cost + Shipping) / (1 - Target Margin % - Commission %)</code>. Automatically updates every 15 minutes via ChannelEngine and AutoDS middleware.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Right Col: Team & Compliance -->
+                            <div class="space-y-8">
+                                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                                    <h4 class="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-users text-emerald-400"></i> Team & Operations
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
+                                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white text-sm">DM</div>
+                                            <div>
+                                                <h5 class="font-bold text-white text-xs">Desmond Arthur Maker</h5>
+                                                <p class="text-[10px] text-slate-400">Founder & Dive Agent Lead</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
+                                            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center font-bold text-white text-sm">KEN</div>
+                                            <div>
+                                                <h5 class="font-bold text-white text-xs">Ken</h5>
+                                                <p class="text-[10px] text-slate-400">Assistant • Customer Support</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
+                                            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white text-sm">序</div>
+                                            <div>
+                                                <h5 class="font-bold text-white text-xs">@序序宝宝</h5>
+                                                <p class="text-[10px] text-slate-400">Assistant • Operations & Bookings</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                                    <h4 class="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-red-400"></i> Location & Branding
+                                    </h4>
+                                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-2">
+                                        <div class="text-xs text-slate-300 font-semibold">Exact Branding Location:</div>
+                                        <div class="text-sm font-black text-primary">淘梦岛 (Dreamer Island)</div>
+                                        <p class="text-xs text-slate-400">Semporna / Kota Kinabalu, Sabah, Malaysia & Amsterdam, Netherlands EU Return Depot.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
-            lucide.createIcons();
+            `;
         }
 
-        // Cart Management
-        function addToCart(id) {
-            const product = catalogProducts.find(p => p.id === id);
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.qty++;
+        // --- CART & E-COMMERCE LOGIC ---
+        function formatPrice(amountInEUR) {
+            let converted = amountInEUR * currencyRates[currentCurrency];
+            let symbol = currencySymbols[currentCurrency];
+            return `${symbol}${converted.toFixed(2)}`;
+        }
+
+        function changeCurrency(curr) {
+            currentCurrency = curr;
+            renderCartDrawer();
+            // Re-render current view if storefront is open
+            if(document.querySelector('.grid-cols-1.sm\\:grid-cols-2')) {
+                renderStorefront(document.getElementById('app-main-container'));
+            }
+        }
+
+        function filterByCategory(cat) {
+            activeCategory = cat;
+            if(document.querySelector('.grid-cols-1.sm\\:grid-cols-2')) {
+                renderStorefront(document.getElementById('app-main-container'));
+            }
+        }
+
+        function handleSearch(query) {
+            searchQuery = query;
+            if(document.querySelector('.grid-cols-1.sm\\:grid-cols-2')) {
+                renderStorefront(document.getElementById('app-main-container'));
+            }
+        }
+
+        function addToCart(productId) {
+            let item = products.find(p => p.id === productId);
+            let existing = cart.find(i => i.id === productId);
+            if(existing) {
+                existing.qty += 1;
             } else {
-                cart.push({ ...product, qty: 1 });
+                cart.push({ ...item, qty: 1 });
             }
-            updateCartUI();
-            showNotification(`${product.name} toegevoegd aan winkelmand`, 'success');
+            updateCartBadge();
+            renderCartDrawer();
+            toggleCartDrawer();
         }
 
-        function updateCartQty(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.qty += delta;
-                if (item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-            }
-            updateCartUI();
+        function updateCartBadge() {
+            let totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cart-badge').innerText = totalQty;
+            document.getElementById('drawer-item-count').innerText = totalQty;
         }
 
-        function updateCartUI() {
-            const count = cart.reduce((sum, item) => sum + item.qty, 0);
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        function toggleCartDrawer() {
+            let drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+            renderCartDrawer();
+        }
 
-            const badge = document.getElementById('cart-badge');
-            if (count > 0) {
-                badge.innerText = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+        function renderCartDrawer() {
+            let container = document.getElementById('cart-items-container');
+            let subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            document.getElementById('cart-subtotal-display').innerText = formatPrice(subtotal);
 
-            document.getElementById('cart-total-header').innerText = formatPrice(subtotal);
-            document.getElementById('cart-subtotal').innerText = formatPrice(subtotal);
-
-            const shipping = subtotal >= 50 || subtotal === 0 ? 0 : 4.95;
-            document.getElementById('cart-shipping-cost').innerText = shipping === 0 ? 'Gratis' : formatPrice(shipping);
-            document.getElementById('cart-grandtotal').innerText = formatPrice(subtotal + shipping);
-
-            const container = document.getElementById('cart-items-container');
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm">Uw winkelmandje is leeg (空).</div>`;
+            if(cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 text-slate-500">
+                        <i class="fa-solid fa-cart-shopping text-4xl mb-3"></i>
+                        <p class="text-sm">Your cart is currently empty.</p>
+                    </div>
+                `;
                 return;
             }
 
             container.innerHTML = cart.map(item => `
-                <div class="flex items-center space-x-4 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-white text-sm truncate">${item.name}</h4>
-                        <span class="text-xs text-amber-400 font-semibold">${formatPrice(item.price)}</span>
-                        <div class="flex items-center space-x-2 mt-2">
-                            <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 rounded bg-slate-800 text-white text-xs font-bold flex items-center justify-center">-</button>
-                            <span class="text-xs text-white font-medium">${item.qty}</span>
-                            <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 rounded bg-slate-800 text-white text-xs font-bold flex items-center justify-center">+</button>
+                py-4 flex items-center justify-between gap-4">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl bg-slate-800">
+                    <div class="flex-1">
+                        <h5 class="font-bold text-white text-xs line-clamp-1 mb-1">${item.name}</h5>
+                        <div class="text-xs font-black text-primary">${formatPrice(item.price)}</div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs">-</button>
+                            <span class="text-xs text-white font-semibold">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs">+</button>
                         </div>
                     </div>
+                    <button onclick="removeFromCart(${item.id})" class="text-slate-500 hover:text-red-400 p-2">
+                        <i class="fa-solid fa-trash text-sm"></i>
+                    </button>
                 </div>
             `).join('');
-            lucide.createIcons();
         }
 
-        function toggleCartDrawer() {
-            document.getElementById('cart-drawer').classList.toggle('hidden');
-        }
-
-        function resetCart() {
-            cart = [];
-            updateCartUI();
-        }
-
-        // Wishlist Management
-        function toggleWishlist(id) {
-            const idx = wishlist.indexOf(id);
-            if (idx > -1) {
-                wishlist.splice(idx, 1);
-                showNotification('Verwijderd uit verlanglijst', 'info');
-            } else {
-                wishlist.push(id);
-                showNotification('Toegevoegd aan verlanglijst', 'success');
+        function updateQty(id, change) {
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
             }
-            updateWishlistUI();
-            renderStoreProducts(currentStoreCategory);
+            updateCartBadge();
+            renderCartDrawer();
         }
 
-        function updateWishlistUI() {
-            const badge = document.getElementById('wishlist-badge');
-            if (wishlist.length > 0) {
-                badge.innerText = wishlist.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-
-            const container = document.getElementById('wishlist-items-container');
-            if (wishlist.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm">Uw verlanglijst is leeg.</div>`;
-                return;
-            }
-
-            const items = catalogProducts.filter(p => wishlist.includes(p.id));
-            container.innerHTML = items.map(item => `
-                <div class="flex items-center space-x-4 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-white text-sm truncate">${item.name}</h4>
-                        <span class="text-xs text-amber-400 font-semibold">${formatPrice(item.price)}</span>
-                    </div>
-                    <button onclick="addToCart(${item.id}); toggleWishlist(${item.id});" class="p-2 rounded-lg bg-taobaored text-white hover:opacity-90 transition"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
-                </div>
-            `).join('');
-            lucide.createIcons();
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartBadge();
+            renderCartDrawer();
         }
 
-        function toggleWishlistDrawer() {
-            document.getElementById('wishlist-drawer').classList.toggle('hidden');
-        }
-
-        // Product Modal
-        function openProductModal(id) {
-            const p = catalogProducts.find(item => item.id === id);
-            const modal = document.getElementById('product-modal');
-            const content = document.getElementById('modal-content');
-
-            content.innerHTML = `
-                <div>
-                    <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover rounded-2xl border border-slate-800">
-                </div>
-                <div class="space-y-4">
-                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">${p.category}</span>
-                    <h2 class="text-2xl font-extrabold text-white">${p.name}</h2>
-                    <div class="flex items-center space-x-2 text-sm text-amber-400">
-                        <div class="flex items-center space-x-1">
-                            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
-                            <span class="font-bold">${p.rating}</span>
-                        </div>
-                        <span class="text-slate-500">&bull;</span>
-                        <span class="text-slate-400">${p.reviews} geverifieerde reviews</span>
-                    </div>
-                    <p class="text-sm text-slate-300 leading-relaxed">${p.desc}</p>
-                    
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Specificaties & Levering</h4>
-                        <ul class="space-y-1 text-xs text-slate-300">
-                            ${p.specs.map(s => `<li class="flex items-center space-x-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>${s}</span></li>`).join('')}
-                        </ul>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-                        <div>
-                            <span class="text-xs text-slate-500 line-through block">${formatPrice(p.originalPrice)}</span>
-                            <span class="text-2xl font-extrabold text-white">${formatPrice(p.price)}</span>
-                        </div>
-                        <button onclick="addToCart(${p.id}); closeProductModal();" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-taobaored to-pinduoduored hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-taobaored/25 transition">
-                            In winkelmand (加入购物车)
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            modal.classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
-
-        // Checkout Process
         function openCheckoutModal() {
-            if (cart.length === 0) {
-                showNotification('Uw winkelmand is leeg', 'info');
+            if(cart.length === 0) {
+                alert('Your cart is empty!');
                 return;
             }
-            toggleCartDrawer();
-            document.getElementById('checkout-form-step').classList.remove('hidden');
-            document.getElementById('checkout-success-step').classList.add('hidden');
+            let subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            document.getElementById('checkout-modal-total').innerText = formatPrice(subtotal);
             document.getElementById('checkout-modal').classList.remove('hidden');
-            lucide.createIcons();
         }
 
         function closeCheckoutModal() {
             document.getElementById('checkout-modal').classList.add('hidden');
         }
 
-        function processCheckoutOrder() {
-            const newOrder = {
-                id: "TM-" + Math.floor(10000 + Math.random() * 90000),
-                platform: "Storefront Web",
-                customer: document.getElementById('chk-fn').value + " " + document.getElementById('chk-ln').value,
-                product: cart[0] ? cart[0].name : "Sipadan Dive Package",
-                supplier: "BigBuy EU / Semporna Partner",
-                status: "API Routing Active",
-                profit: "€32.40"
-            };
-            automatedOrders.unshift(newOrder);
-
-            document.getElementById('checkout-form-step').classList.add('hidden');
-            document.getElementById('checkout-success-step').classList.remove('hidden');
-            lucide.createIcons();
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            alert('Order successfully placed and routed via BigBuy / Droppery EU Warehouse API! Synced with Amazon.nl & Bol.com fulfillment pipeline.');
+            cart = [];
+            updateCartBadge();
+            closeCheckoutModal();
+            toggleCartDrawer();
         }
 
-        // ==================== DASHBOARD & AUTOMATION LOGIC ====================
-        function renderDashboardOrders() {
-            const container = document.getElementById('dashboard-order-queue');
-            container.innerHTML = automatedOrders.map(o => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-3 font-mono text-amber-400 font-bold">${o.id}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${o.platform === 'Bol.com' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}">${o.platform}</span></td>
-                    <td class="p-3 font-medium text-white">${o.customer}</td>
-                    <td class="p-3 text-slate-300">${o.product}</td>
-                    <td class="p-3 text-slate-400 font-mono">${o.supplier}</td>
-                    <td class="p-3"><span class="text-emerald-400 font-medium flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>${o.status}</span></span></td>
-                    <td class="p-3 text-right font-mono font-bold text-emerald-400">${o.profit}</td>
-                </tr>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function simulateNewOrder() {
-            const names = ["Sven de Vries", "Anouk Visser", "Pieter van de Berg", "Karin Mulder"];
-            const items = ["Sipadan VIP Dive Package", "Pro 4K Underwater Video Rig", "Titanium Backplate & Wing", "Gissah Imperial Valley Extrait"];
-            const platforms = ["Amazon.nl", "Bol.com", "Storefront Web"];
-            
-            const randomOrder = {
-                id: "TM-" + Math.floor(10000 + Math.random() * 90000),
-                platform: platforms[Math.floor(Math.random() * platforms.length)],
-                customer: names[Math.floor(Math.random() * names.length)],
-                product: items[Math.floor(Math.random() * items.length)],
-                supplier: "Droppery / BigBuy EU",
-                status: "Tracking Injected via API",
-                profit: "€" + (20 + Math.random() * 35).toFixed(2)
-            };
-
-            automatedOrders.unshift(randomOrder);
-            renderDashboardOrders();
-            showNotification(`Nieuwe bestelling ${randomOrder.id} automatisch gesynchroniseerd met EU-leverancier!`, 'success');
-        }
-
-        function switchDashboardPlatform(plat) {
-            if (plat === 'amazon') {
-                document.getElementById('plat-btn-amazon').className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-blue-600 text-white shadow";
-                document.getElementById('plat-btn-bol').className = "px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
-                showNotification('Amazon.nl SP-API feed geselecteerd', 'info');
-            } else {
-                document.getElementById('plat-btn-amazon').className = "px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
-                document.getElementById('plat-btn-bol').className = "px-4 py-2 rounded-lg text-xs font-bold transition bg-emerald-600 text-white shadow";
-                showNotification('Bol.com Partnerplatform feed geselecteerd', 'info');
-            }
-        }
-
-        function calculateExecPricing() {
-            const cost = parseFloat(document.getElementById('exec-cost').value) || 0;
-            const shipping = parseFloat(document.getElementById('exec-shipping').value) || 0;
-            const targetMargin = (parseFloat(document.getElementById('exec-margin').value) || 0) / 100;
-            const commission = (parseFloat(document.getElementById('exec-commission').value) || 0) / 100;
-
-            const totalCost = cost + shipping;
-            const denominator = 1 - targetMargin - commission;
-            let retail = 0;
-            if (denominator > 0) {
-                retail = totalCost / denominator;
-            }
-            const profit = retail * targetMargin;
-
-            document.getElementById('exec-res-retail').innerText = '€' + retail.toFixed(2);
-            document.getElementById('exec-res-profit').innerText = '€' + profit.toFixed(2);
-        }
-
-        function initFinancialChart() {
-            const ctx = document.getElementById('financialChart').getContext('2d');
-            if (window.myChart) window.myChart.destroy();
-            window.myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Supplier Cost', 'Platform Commission (12%)', 'EU Shipping & Logistics', 'Net Profit Margin (16.8%)', 'Return Buffer & Tools'],
-                    datasets: [{
-                        data: [42, 12, 14, 17, 15],
-                        backgroundColor: ['#3b82f6', '#f59e0b', '#06b6d4', '#10b981', '#64748b'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: { color: '#94a3b8', font: { size: 10, family: 'Inter' }, boxWidth: 10, padding: 10 }
-                        }
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Live Chat Simulation
-        function toggleChat() {
-            document.getElementById('chat-window').classList.toggle('hidden');
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const val = input.value.trim();
-            if (!val) return;
-
-            const container = document.getElementById('chat-messages');
-            container.innerHTML += `<div class="bg-taobaored text-white p-3 rounded-xl rounded-tr-none max-w-[85%] ml-auto">${val}</div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                container.innerHTML += `<div class="bg-slate-800 p-3 rounded-xl rounded-tl-none max-w-[85%]">收到！感谢您的咨询。 Taomeng Island (淘梦岛) 24小时为您 and Sipadan duikreizen klaar staan!</div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 1000);
-        }
-
-        // Toast Notification System
-        function showNotification(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-xl text-sm transition transform translate-y-2 opacity-0 duration-300 ${
-                type === 'success' ? 'bg-slate-900 border-taobaored/40 text-taobaored' : 'bg-slate-900 border-blue-500/40 text-blue-400'
-            }`;
-            
-            toast.innerHTML = `
-                <i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-200">${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            lucide.createIcons();
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
+        // Initialize App on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            switchView('storefront');
+        });
     </script>
 </body>
 </html>
