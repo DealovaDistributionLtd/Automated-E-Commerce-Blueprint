@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="nl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taomeng Island | Premium European Lifestyle, Home & Tech Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0f1d',
+                        cardbg: '#111827',
+                        cardhover: '#1f2937',
+                        accentgold: '#d97706',
+                        accentblue: '#3b82f6',
+                        accentemerald: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0f1d; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Announcement Banner -->
+    <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 text-white text-xs sm:text-sm font-medium py-2 px-4 text-center tracking-wide flex items-center justify-center space-x-2">
+        <i data-lucide="truck" class="w-4 h-4 shrink-0"></i>
+        <span>Gratis verzending in NL & BE vanaf €50 &bull; 1–3 werkdagen EU-levering &bull; 30 dagen bedenktijd</span>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 border-b border-slate-800 bg-darkbg/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 shrink-0">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <i data-lucide="compass" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Taomeng Island</span>
+                    <span class="block text-[10px] text-slate-400 uppercase tracking-widest font-semibold">淘梦岛 &bull; NL/BE Store</span>
+                </div>
+            </div>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-md mx-6">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                    </span>
+                    <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Zoek op smart tech, home & living, geuren..." class="w-full bg-slate-900/90 border border-slate-800 rounded-full pl-10 pr-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition">
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <!-- Currency Switcher -->
+                <select class="hidden sm:block bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none">
+                    <option value="EUR">EUR (€)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="GBP">GBP (£)</option>
+                </select>
+
+                <!-- Wishlist Button -->
+                <button onclick="toggleWishlistDrawer()" class="relative p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition border border-slate-800">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                    <span id="wishlist-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center hidden">0</span>
+                </button>
+
+                <!-- Cart Button -->
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition border border-slate-800 flex items-center space-x-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span class="hidden sm:inline text-xs font-semibold" id="cart-total-header">€0,00</span>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-darkbg to-darkbg py-16 sm:py-24 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>Exclusieve Europese Collectie 2026</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                    Ontdek Luxe voor <span class="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Huis & Leven</span>
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
+                    Vakkundig geselecteerde premium lifestyle-, smart tech- en home-accessoires. Rechtstreeks geleverd vanuit gecertificeerde EU-magazijnen in 1–3 dagen.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#shop-section" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm shadow-xl shadow-amber-500/25 transition text-center">
+                        Bekijk Collectie
+                    </a>
+                    <button onclick="openSupportModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm transition flex items-center justify-center space-x-2">
+                        <i data-lucide="headset" class="w-4 h-4 text-amber-400"></i>
+                        <span>Klantenservice NL</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Visual Badges -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base">1–3 Dagen EU-Levering</h3>
+                    <p class="text-xs text-slate-400">Snelle verzending via PostNL, DHL & Bpost vanuit centrale Europese magazijnen.</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base">Officiële Garantie</h3>
+                    <p class="text-xs text-slate-400">100% originele producten met fabrieksgarantie en 30 dagen zorgeloos retourneren.</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3 sm:col-span-2">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="credit-card" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base">Veilig Betalen in NL & BE</h3>
+                            <p class="text-xs text-slate-400">Direct afrekenen via iDEAL, Bancontact, Creditcard, Klarna en Apple Pay.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute -right-20 -top-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    </section>
+
+    <!-- Main Shop Section -->
+    <main id="shop-section" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        
+        <!-- Category Filter Bar -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-6">
+            <div>
+                <h2 class="text-2xl font-extrabold text-white">Onze Producten</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Filter op categorie om uw favoriete items te vinden.</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2" id="category-filters">
+                <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-amber-500 text-white shadow-lg shadow-amber-500/20">Alle Producten</button>
+                <button onclick="filterCategory('Home & Living')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Home & Living</button>
+                <button onclick="filterCategory('Smart Tech')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Smart Tech</button>
+                <button onclick="filterCategory('Outdoor & Travel')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Outdoor & Travel</button>
+                <button onclick="filterCategory('Fragrances')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Fragrances</button>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Dynamically populated via JavaScript -->
+        </div>
+    </main>
+
+    <!-- FAQ & Customer Support Section -->
+    <section class="border-t border-slate-800 bg-slate-950 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="text-center space-y-2">
+                <span class="text-amber-400 text-xs font-bold uppercase tracking-wider">Hulp & Informatie</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Veelgestelde Vragen (FAQ)</h2>
+                <p class="text-xs sm:text-sm text-slate-400">Alles wat u moet weten over onze levering in NL & BE, retourneren en betalingen.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
+                    <h3 class="font-bold text-white text-sm sm:text-base flex items-center justify-between cursor-pointer">
+                        <span>Wat zijn de levertijden in Nederland en België?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-400"></i>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300">Alle bestellingen geplaatst voor 23:59 worden direct verzonden vanuit onze EU-magazijnen. De levertijd bedraagt doorgaans 1 tot 3 werkdagen via betrouwbare vervoerders zoals PostNL en Bpost.</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
+                    <h3 class="font-bold text-white text-sm sm:text-base flex items-center justify-between cursor-pointer">
+                        <span>Hoe werkt het retourneren?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-400"></i>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300">U heeft een bedenktijd van 30 dagen. Via ons online retourportaal genereert u eenvoudig een retourlabel om het pakket kosteloos of tegen gering tarief terug te sturen naar ons retourcentrum in Nederland.</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
+                    <h3 class="font-bold text-white text-sm sm:text-base flex items-center justify-between cursor-pointer">
+                        <span>Welke betaalmethoden worden ondersteund?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-400"></i>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300">Wij ondersteunen iDEAL, Bancontact, Creditcard (Visa/Mastercard), Klarna (achteraf betalen), PayPal en Apple Pay.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-darkbg py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center">
+                        <i data-lucide="compass" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-bold text-lg text-white">Taomeng Island</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Uw premium bestemming voor hoogwaardige Europese lifestyle-, home- en tech-accessoires. Gevestigd en verzonden vanuit de EU.
+                </p>
+                <div class="text-xs text-slate-500">&copy; 2026 Taomeng Island Store. Alle rechten voorbehouden.</div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white text-sm mb-3">Klantenservice</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#" onclick="openSupportModal(); return false;" class="hover:text-white transition">Live Chat & Support</a></li>
+                    <li><a href="#" onclick="showNotification('Retourportaal geopend', 'info'); return false;" class="hover:text-white transition">Retourneren & Ruilen</a></li>
+                    <li><a href="#" onclick="showNotification('Verzendinformatie geladen', 'info'); return false;" class="hover:text-white transition">Verzending NL & BE</a></li>
+                    <li><a href="#" onclick="showNotification('Garantievoorwaarden geopend', 'info'); return false;" class="hover:text-white transition">Garantie & Klachten</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white text-sm mb-3">Juridisch & Beleid</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#" class="hover:text-white transition">Algemene Voorwaarden</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacybeleid (AVG)</a></li>
+                    <li><a href="#" class="hover:text-white transition">Cookiebeleid</a></li>
+                    <li><a href="#" class="hover:text-white transition">KvK & BTW Informatie</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="font-bold text-white text-sm">Ontvang €10 Korting</h4>
+                <p class="text-xs text-slate-400">Schrijf u in voor onze nieuwsbrief en ontvang direct een kortingscode van €10 op uw eerste bestelling.</p>
+                <div class="flex items-center space-x-2">
+                    <input type="email" placeholder="Uw e-mailadres..." class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 flex-1">
+                    <button onclick="showNotification('Bedankt voor uw inschrijving! Uw €10 kortingscode is verzonden.', 'success')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs transition">
+                        Aanmelden
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col">
+                <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-400"></i>
+                        <h3 class="font-bold text-white text-lg">Winkelmandje</h3>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div class="p-6 border-t border-slate-800 space-y-4 bg-slate-950/50">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-slate-400">Subtotaal</span>
+                        <span id="cart-subtotal" class="font-bold text-white">€0,00</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-slate-400">Verzending (NL & BE)</span>
+                        <span id="cart-shipping-cost" class="font-semibold text-emerald-400">Gratis</span>
+                    </div>
+                    <div class="border-t border-slate-800 pt-3 flex items-center justify-between text-base font-bold">
+                        <span class="text-white">Totaal</span>
+                        <span id="cart-grandtotal" class="text-amber-400">€0,00</span>
+                    </div>
+
+                    <button onclick="openCheckoutModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-2">
+                        <span>Naar Afrekenen</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WISHLIST DRAWER -->
+    <div id="wishlist-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleWishlistDrawer()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col">
+                <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="heart" class="w-5 h-5 text-amber-400"></i>
+                        <h3 class="font-bold text-white text-lg">Mijn Verlanglijst</h3>
+                    </div>
+                    <button onclick="toggleWishlistDrawer()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <div id="wishlist-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeProductModal()"></div>
+        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 z-10 shadow-2xl space-y-6">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeCheckoutModal()"></div>
+        <div class="relative bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 z-10 shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-amber-400"></i>
+                    <h3 class="font-bold text-white text-lg">Veilig Afrekenen (NL & BE)</h3>
+                </div>
+                <button onclick="closeCheckoutModal()" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Checkout Steps -->
+            <div id="checkout-form-step" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Voornaam</label>
+                        <input type="text" id="chk-fn" value="Jan" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Achternaam</label>
+                        <input type="text" id="chk-ln" value="Jansen" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">E-mailadres</label>
+                    <input type="email" id="chk-email" value="jan.jansen@example.nl" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Straatnaam & Huisnummer</label>
+                        <input type="text" id="chk-street" value="Keizersgracht 124" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Postcode</label>
+                        <input type="text" id="chk-zip" value="1015 CW" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Stad / Plaats</label>
+                        <input type="text" id="chk-city" value="Amsterdam" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Land</label>
+                        <select id="chk-country" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                            <option value="NL">Nederland</option>
+                            <option value="BE">België</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-2">Betaalmethode</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="border border-amber-500 bg-amber-500/10 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-white flex flex-col items-center justify-center space-y-1">
+                            <input type="radio" name="payment" checked class="hidden">
+                            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                            <span>iDEAL / Bancontact</span>
+                        </label>
+                        <label class="border border-slate-800 bg-slate-950 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-slate-300 flex flex-col items-center justify-center space-y-1 hover:border-slate-700">
+                            <input type="radio" name="payment" class="hidden">
+                            <i data-lucide="credit-card" class="w-4 h-4"></i>
+                            <span>Creditcard</span>
+                        </label>
+                        <label class="border border-slate-800 bg-slate-950 rounded-xl p-3 text-center cursor-pointer text-xs font-semibold text-slate-300 flex flex-col items-center justify-center space-y-1 hover:border-slate-700">
+                            <input type="radio" name="payment" class="hidden">
+                            <i data-lucide="shield" class="w-4 h-4"></i>
+                            <span>Klarna (Achteraf)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="processOrder()" class="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-2">
+                    <span>Bestelling Bevestigen & Betalen</span>
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Success State (Hidden by default) -->
+            <div id="checkout-success-step" class="hidden text-center space-y-4 py-8">
+                <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center">
+                    <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white">Bestelling Succesvol Geplaatst!</h4>
+                <p class="text-xs text-slate-300 max-w-sm mx-auto">
+                    Bedankt voor uw bestelling bij Taomeng Island. Uw ordernummer is <strong class="text-amber-400">#TM-84920</strong>. Een bevestiging en track & trace code zijn verzonden naar uw e-mailadres.
+                </p>
+                <button onclick="closeCheckoutModal(); resetCart();" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition">
+                    Terug naar de Winkel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE CHAT WIDGET -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-r from-amber-600 to-orange-600 p-4 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                    <span class="font-bold text-sm">Taomeng Support (NL / BE)</span>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            
+            <div id="chat-messages" class="p-4 h-64 overflow-y-auto space-y-3 text-xs text-slate-300">
+                <div class="bg-slate-800 p-3 rounded-xl rounded-tl-none max-w-[85%]">
+                    Dag! Welkom bij Taomeng Island. Heeft u vragen over onze producten of de levering in NL/BE? Ik help u graag!
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-slate-800 flex items-center space-x-2 bg-slate-950">
+                <input type="text" id="chat-input" placeholder="Typ uw bericht..." onkeypress="if(event.key==='Enter') sendChatMessage()" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition"><i data-lucide="send" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+
+        <button onclick="toggleChat()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 text-white shadow-2xl flex items-center justify-center hover:scale-105 transition">
+            <i data-lucide="message-square" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Product Dataset (Taomeng Island Catalog)
+        const products = [
+            {
+                id: 1,
+                name: "Nordic Minimalist LED Tafellamp",
+                category: "Home & Living",
+                price: 79.99,
+                originalPrice: 119.99,
+                rating: 4.9,
+                reviews: 142,
+                image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80",
+                desc: "Handgemaakte aluminium tafellamp met dimbare warm-LED verlichting. Ideaal voor sfeervolle verlichting in woon- of slaapkamer.",
+                specs: ["Materiaal: Geborsteld Aluminium", "Lichtkleur: 2700K Warm Wit", "Voeding: USB-C oplaadbaar", "EU Voorraad: > 120 stuks"]
+            },
+            {
+                id: 2,
+                name: "Smart Ambient RGB Klok & Speaker",
+                category: "Smart Tech",
+                price: 64.50,
+                originalPrice: 89.99,
+                rating: 4.8,
+                reviews: 98,
+                image: "https://images.unsplash.com/photo-1545128485-c400e7702796?auto=format&fit=crop&w=600&q=80",
+                desc: "Multifunctionele wekker met draadloze 15W oplader, Bluetooth 5.2 hifi-speaker en dynamische RGB sfeerverlichting.",
+                specs: ["Connectiviteit: Bluetooth 5.2", "Draadloos laden: 15W Fast Qi", "App-bediening: Ja (iOS & Android)", "EU Voorraad: > 85 stuks"]
+            },
+            {
+                id: 3,
+                name: "Ergonomische Titanium Reismok (500ml)",
+                category: "Outdoor & Travel",
+                price: 34.95,
+                originalPrice: 49.95,
+                rating: 4.7,
+                reviews: 215,
+                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+                desc: "Dubbelwandig vacuüm geïsoleerde thermosbeker van medische kwaliteit titanium. Houdt dranken 12 uur warm of 24 uur koud.",
+                specs: ["Inhoud: 500 ml", "Materiaal: TA1 Titanium", "Lekvrij: 100% gegarandeerd", "EU Voorraad: > 240 stuks"]
+            },
+            {
+                id: 4,
+                name: "Botanical Amber Geurstokjes Luxe Set",
+                category: "Fragrances",
+                price: 39.99,
+                originalPrice: 55.00,
+                rating: 4.9,
+                reviews: 310,
+                image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80",
+                desc: "Ambachtelijke geurstokjes met noten van cederhout, amber en witte musk. Gaat tot wel 4 maanden mee in uw woonkamer.",
+                specs: ["Inhoud: 250ml geurolie", "Duur: 3-4 maanden", "Natuurlijke extracten: 100%", "EU Voorraad: > 150 stuks"]
+            },
+            {
+                id: 5,
+                name: "Smart Plant Monitor & Automatische Drup",
+                category: "Smart Tech",
+                price: 45.00,
+                originalPrice: 60.00,
+                rating: 4.6,
+                reviews: 76,
+                image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80",
+                desc: "Slimme sensor die bodemvochtigheid, zonlicht en voeding meet en automatisch water geeft via gekoppelde pomp.",
+                specs: ["Batterijduur: 12 maanden", "Waterresistent: IPX6", "Bluetooth 5.0", "EU Voorraad: > 90 stuks"]
+            },
+            {
+                id: 6,
+                name: "Scandinavische Leren Wandwandklok",
+                category: "Home & Living",
+                price: 89.00,
+                originalPrice: 120.00,
+                rating: 4.8,
+                reviews: 134,
+                image: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=600&q=80",
+                desc: "Strakke wandklok met massief eikenhouten wijzerplaat en echt Italiaans tuigleer ophangkoord. Geruisloos uurwerk.",
+                specs: ["Diameter: 35 cm", "Uurwerk: Sweep Silent", "Gewicht: 1.2 kg", "EU Voorraad: > 60 stuks"]
+            },
+            {
+                id: 7,
+                name: "Ultra-Lightweight Carbon Kampeertent (2P)",
+                category: "Outdoor & Travel",
+                price: 189.00,
+                originalPrice: 249.00,
+                rating: 4.9,
+                reviews: 88,
+                image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80",
+                desc: "Ultralichte 4-seizoenen tent met carbon stokken en waterdichte flysheet. Snel op te zetten tijdens hikes in de Ardennen of Veluwe.",
+                specs: ["Gewicht: 1.6 kg", "Waterkolom: 3000mm", "Capaciteit: 2 personen", "EU Voorraad: > 40 stuks"]
+            },
+            {
+                id: 8,
+                name: "Aromatherapie Ultrasone Luchtvernevelaar",
+                category: "Fragrances",
+                price: 52.50,
+                originalPrice: 75.00,
+                rating: 4.7,
+                reviews: 190,
+                image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=600&q=80",
+                desc: "Stille ultrasone diffuser met vlam-effect LED verlichting en automatische uitschakeling bij lege watertank.",
+                specs: ["Tankinhoud: 300ml", "Werkingstijd: 10-14 uur", "Stil: < 25dB", "EU Voorraad: > 110 stuks"]
+            }
+        ];
+
+        let cart = [];
+        let wishlist = [];
+        let currentCategory = 'All';
+
+        // Render Products
+        function renderProducts(category = 'All') {
+            const grid = document.getElementById('product-grid');
+            const filtered = category === 'All' ? products : products.filter(p => p.category === category);
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 flex flex-col group hover:border-amber-500/50 transition duration-300">
+                    <div class="relative overflow-hidden aspect-square bg-slate-900 cursor-pointer" onclick="openProductModal(${p.id})">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x600/111827/d97706?text=Taomeng+Island'">
+                        <div class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">
+                            -${Math.round((1 - p.price / p.originalPrice) * 100)}%
+                        </div>
+                        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2 rounded-full bg-slate-900/80 backdrop-blur-md text-slate-300 hover:text-amber-400 transition">
+                            <i data-lucide="heart" class="w-4 h-4 ${wishlist.includes(p.id) ? 'fill-amber-500 text-amber-500' : ''}"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-semibold text-amber-400 uppercase tracking-widest">${p.category}</span>
+                                <div class="flex items-center space-x-1 text-xs text-amber-400">
+                                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                                    <span class="font-bold">${p.rating}</span>
+                                    <span class="text-slate-500">(${p.reviews})</span>
+                                </div>
+                            </div>
+                            <h3 onclick="openProductModal(${p.id})" class="font-bold text-white text-base hover:text-amber-400 cursor-pointer transition">${p.name}</h3>
+                            <p class="text-xs text-slate-400 line-clamp-2">${p.desc}</p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                            <div>
+                                <span class="text-xs text-slate-500 line-through block">€${p.originalPrice.toFixed(2)}</span>
+                                <span class="text-lg font-extrabold text-white">€${p.price.toFixed(2)}</span>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-lg shadow-amber-500/20 transition flex items-center space-x-1.5">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>In winkelmand</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        renderProducts();
+
+        // Category Filter
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('Alle'))) {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-amber-500 text-white shadow-lg shadow-amber-500/20";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800";
+                }
+            });
+            renderProducts(cat);
+        }
+
+        // Search Filter
+        function handleSearch(query) {
+            const q = query.toLowerCase();
+            const grid = document.getElementById('product-grid');
+            const filtered = products.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 flex flex-col group hover:border-amber-500/50 transition duration-300">
+                    <div class="relative overflow-hidden aspect-square bg-slate-900 cursor-pointer" onclick="openProductModal(${p.id})">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">
+                            -${Math.round((1 - p.price / p.originalPrice) * 100)}%
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-semibold text-amber-400 uppercase tracking-widest">${p.category}</span>
+                            <h3 onclick="openProductModal(${p.id})" class="font-bold text-white text-base hover:text-amber-400 cursor-pointer transition">${p.name}</h3>
+                            <p class="text-xs text-slate-400 line-clamp-2">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                            <span class="text-lg font-extrabold text-white">€${p.price.toFixed(2)}</span>
+                            <button onclick="addToCart(${p.id})" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs transition">In winkelmand</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Cart Functions
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+            showNotification(`${product.name} toegevoegd aan winkelmand`, 'success');
+        }
+
+        function updateCartQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            const badge = document.getElementById('cart-badge');
+            if (count > 0) {
+                badge.innerText = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            document.getElementById('cart-total-header').innerText = '€' + subtotal.toFixed(2);
+            document.getElementById('cart-subtotal').innerText = '€' + subtotal.toFixed(2);
+
+            const shipping = subtotal >= 50 || subtotal === 0 ? 0 : 4.95;
+            document.getElementById('cart-shipping-cost').innerText = shipping === 0 ? 'Gratis' : '€' + shipping.toFixed(2);
+            document.getElementById('cart-grandtotal').innerText = '€' + (subtotal + shipping).toFixed(2);
+
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm">Uw winkelmandje is leeg.</div>`;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center space-x-4 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-white text-sm truncate">${item.name}</h4>
+                        <span class="text-xs text-amber-400 font-semibold">€${item.price.toFixed(2)}</span>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center">-</button>
+                            <span class="text-xs text-white font-medium">${item.qty}</span>
+                            <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function resetCart() {
+            cart = [];
+            updateCartUI();
+        }
+
+        // Wishlist Functions
+        function toggleWishlist(id) {
+            const idx = wishlist.indexOf(id);
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+                showNotification('Verwijderd uit verlanglijst', 'info');
+            } else {
+                wishlist.push(id);
+                showNotification('Toegevoegd aan verlanglijst', 'success');
+            }
+            updateWishlistUI();
+            renderProducts(currentCategory);
+        }
+
+        function updateWishlistUI() {
+            const badge = document.getElementById('wishlist-badge');
+            if (wishlist.length > 0) {
+                badge.innerText = wishlist.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            const container = document.getElementById('wishlist-items-container');
+            if (wishlist.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm">Uw verlanglijst is leeg.</div>`;
+                return;
+            }
+
+            const items = products.filter(p => wishlist.includes(p.id));
+            container.innerHTML = items.map(item => `
+                <div class="flex items-center space-x-4 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-white text-sm truncate">${item.name}</h4>
+                        <span class="text-xs text-amber-400 font-semibold">€${item.price.toFixed(2)}</span>
+                    </div>
+                    <button onclick="addToCart(${item.id}); toggleWishlist(${item.id});" class="p-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600 transition"><i data-lucide="shopping-bag" class="w-4 h-4"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function toggleWishlistDrawer() {
+            const drawer = document.getElementById('wishlist-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Product Modal
+        function openProductModal(id) {
+            const p = products.find(item => item.id === id);
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+
+            content.innerHTML = `
+                <div>
+                    <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover rounded-2xl border border-slate-800">
+                </div>
+                <div class="space-y-4">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">${p.category}</span>
+                    <h2 class="text-2xl font-extrabold text-white">${p.name}</h2>
+                    <div class="flex items-center space-x-2 text-sm text-amber-400">
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                            <span class="font-bold">${p.rating}</span>
+                        </div>
+                        <span class="text-slate-500">&bull;</span>
+                        <span class="text-slate-400">${p.reviews} geverifieerde reviews</span>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed">${p.desc}</p>
+                    
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Specificaties & Voorraad</h4>
+                        <ul class="space-y-1 text-xs text-slate-300">
+                            ${p.specs.map(s => `<li class="flex items-center space-x-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>${s}</span></li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                        <div>
+                            <span class="text-xs text-slate-500 line-through block">€${p.originalPrice.toFixed(2)}</span>
+                            <span class="text-2xl font-extrabold text-white">€${p.price.toFixed(2)}</span>
+                        </div>
+                        <button onclick="addToCart(${p.id}); closeProductModal();" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm shadow-lg shadow-amber-500/25 transition">
+                            In winkelmand
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        // Checkout Modal
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showNotification('Uw winkelmand is leeg', 'info');
+                return;
+            }
+            toggleCartDrawer();
+            document.getElementById('checkout-form-step').classList.remove('hidden');
+            document.getElementById('checkout-success-step').classList.add('hidden');
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function processOrder() {
+            document.getElementById('checkout-form-step').classList.add('hidden');
+            document.getElementById('checkout-success-step').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // Support Modal / Live Chat
+        function openSupportModal() {
+            toggleChat();
+        }
+
+        function toggleChat() {
+            const chat = document.getElementById('chat-window');
+            chat.classList.toggle('hidden');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const container = document.getElementById('chat-messages');
+            container.innerHTML += `
+                <div class="bg-amber-600 text-white p-3 rounded-xl rounded-tr-none max-w-[85%] ml-auto">
+                    ${val}
+                </div>
+            `;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                container.innerHTML += `
+                    <div class="bg-slate-800 p-3 rounded-xl rounded-tl-none max-w-[85%]">
+                        Bedankt voor uw bericht! Onze klantenservice in Amsterdam reageert binnen enkele minuten. Uw vraag over levering of producten wordt direct in behandeling genomen.
+                    </div>
+                `;
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+
+        // Toast Notification System
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-xl text-sm transition transform translate-y-2 opacity-0 duration-300 ${
+                type === 'success' ? 'bg-slate-900 border-amber-500/40 text-amber-400' : 'bg-slate-900 border-blue-500/40 text-blue-400'
+            }`;
+            
+            toast.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4 shrink-0"></i>
+                <span class="text-slate-200">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
